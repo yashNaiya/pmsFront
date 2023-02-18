@@ -82,7 +82,6 @@ const Profile = () => {
                             {!edit && <Box overflow={'hidden'} borderRadius={'50%'} marginLeft={'5rem'} sx={{ translate: '0px 60px' }} border={'4px solid #314d78'}>
                                 {rootUser.image==='' && <img src={Localimage} position='center' alt='profile' width={'150'} height={'auto'} />
                                 ||
-
                                 <img src={SERVER_HOST+rootUser.image} position='center' alt='profile1' width={'150'} height={'auto'} />
                                 }
                             </Box> ||
@@ -142,7 +141,7 @@ const Profile = () => {
                                 <Typography sx={{ backgroundColor: 'grey.main' }} borderRadius={'.5rem'} width='40%' paddingLeft={3} paddingY={1}>{rootUser.number}</Typography>
                             </Box>
                         </Box> ||
-                            <Box width={'30%'} paddingTop={'4rem'} paddingX={'8rem'} flex={6}>
+                            <Box width={'30%'} paddingY={'4rem'} paddingX={'8rem'} flex={6}>
                                 <Box marginBottom={5} display={'flex'} justifyContent={'flex-start'} flexDirection={'column'}>
                                     <Typography paddingY={1} marginRight={'5rem'}>Name</Typography>
                                     <TextField size='small' value={rootUser.name} name='name' onChange={handleChange} sx={{ backgroundColor: 'grey.main' }} borderRadius={'.5rem'} width='40%' paddingLeft={3} paddingY={1}></TextField>
@@ -163,7 +162,8 @@ const Profile = () => {
                                     <Typography paddingY={1} marginRight={'5rem'}>Number</Typography>
                                     <TextField size='small' value={rootUser.number} name='number' onChange={handleChange} sx={{ backgroundColor: 'grey.main' }} borderRadius={'.5rem'} width='40%' paddingLeft={3} paddingY={1}></TextField>
                                 </Box>
-                                <Button variant='contained' onClick={handleSave}>save</Button>
+                                <Button variant='contained' sx={{width:'6rem'}} onClick={handleSave}>save</Button>
+                                <Button variant='outlined' sx={{marginLeft:'3rem'}} onClick={()=>{setedit(false)}}>cancel</Button>
                             </Box>
                         }
 

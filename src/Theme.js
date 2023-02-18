@@ -2,7 +2,7 @@ import { createTheme } from "@mui/material";
 
 const theme = createTheme({
     typography:{
-        fontFamily:'Lucida Sans',
+        fontFamily:'Inter',
     },
     palette:{
         primary:{
@@ -19,7 +19,8 @@ const theme = createTheme({
             main:"#FEBE8C"
         },
         grey:{
-            main:'#D9D9D9'
+            main:'#D9D9D9',
+            dark:'#5a5757'
         }
     },
     

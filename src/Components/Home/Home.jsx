@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import api from '../../Api'
 import { Box, Stack } from '@mui/material';
 import Navigate from '../Navigate';
+import Sidebar from './Sidebar';
+import Homemain from './Homemain';
 
 const Home = () => {
   const [rootUser, setrootUser] = useState()
@@ -26,8 +28,11 @@ const Home = () => {
       <Box>
         <Stack direction={'row'} justifyContent='space-between'>
           <Navigate />
-          <Box bgcolor={'grey.main'} flex={16}>
-            home page
+          <Box flex={16}>
+          <Stack direction={'row'} justifyContent='space-between'>
+            <Sidebar/>
+            <Homemain/>
+          </Stack>
           </Box>
         </Stack>
       </Box>

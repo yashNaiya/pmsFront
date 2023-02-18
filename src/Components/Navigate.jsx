@@ -21,16 +21,16 @@ const Navigate = () => {
                 <Button>
                     <Category onClick={()=>{navigate('/home')}} color='#fff' size={'2rem'} />
                 </Button>
-                <Button>
+                <Button onClick={()=>{navigate('/notification')}}>
                     <Notification color='#fff' size={'2rem'} />
                 </Button>
-                <Button>
+                <Button onClick={()=>{navigate('/mywork')}}>
                     <TaskSquare color='#fff' size={'2rem'} />
                 </Button>
             </Box>
             <Box height={'40%'} alignItems={'center'} display={'flex'} justifyContent={'space-evenly'} flexDirection={'column'}>
                 <Button>
-                    <People color='#fff' size={'2rem'} />
+                    <People onClick={()=>{navigate('/teams')}} color='#fff' size={'2rem'} />
                 </Button>
                 <Button>
                     <ProfileAdd color='#fff' size={'2rem'} />
