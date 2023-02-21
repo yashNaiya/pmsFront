@@ -24,6 +24,7 @@ const Home = () => {
     callHomePage();
   }, [])
   if (rootUser) {
+    
     return (
       <Box>
         <Stack direction={'row'} justifyContent='space-between'>
