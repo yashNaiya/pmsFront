@@ -1,74 +1,114 @@
-import { Box, Button, FormControl, Input, InputAdornment, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
+import { Box, Button, FormControl, IconButton, Input, InputAdornment, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 import { Add, ArrowDown, ArrowDown2, DirectDown, More, SearchNormal, TickCircle } from 'iconsax-react'
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useState } from 'react'
+import AppContext from '../AppContext'
+import { useContext } from 'react'
+import api from '../../Api'
 
-const Sidebarteams = () => {
-    const [age, setAge] = React.useState('');
+const Sidebarteams = (props) => {
+    const [search, setsearch] = useState()
+    const [showallteams, setshowallteams] = useState(false)
+    const [showmyteams, setshowmyteams] = useState(false)
+    const myContext = useContext(AppContext)
+    if (props.allTeams && props.myTeams) {
+        return (
+            <Box flex={1} minHeight={'100vh'} bgcolor={'grey.main'}>
+                <Box minHeight={'22%'} borderBottom={'1px solid black'} justifyContent={'space-between'} display={'flex'} flexDirection={'column'} marginX={'1rem'} paddingBottom={'1rem'} paddingTop={'4rem'}>
+                    <TextField
+                        value={search}
+                        onChange={(e) => {
+                            setsearch(e.target.value)
+                            // users1 = props.users.filter(user => {
+                            //     return user.name.includes(search) || user.email.includes(search)
+                            // })
+                            // if (search === '') { users1 = [] }
+                            // console.log(users1)
 
-    const handleChange = (event) => {
-        setAge(event.target.value);
-    };
-    return (
-        <Box flex={1} minHeight={'100vh'} bgcolor={'grey.main'}>
-            <Box minHeight={'22%'} borderBottom={'1px solid black'} justifyContent={'space-between'} display={'flex'} flexDirection={'column'} marginX={'1rem'} paddingBottom={'1rem'} paddingTop={'4rem'}>
-                <TextField
-                    variant='standard'
-                    size='small'
-                    placeholder='search'
-                    sx={{ backgroundColor: '#fff',paddingX:'.5rem',paddingY:'.2rem',borderRadius:'.5rem'  }}
-                    InputProps={{
-                        disableUnderline: true,
-                        startAdornment: <InputAdornment position="start"><SearchNormal /></InputAdornment>,
-                    }}
-                />
-                <Box>
-                    <Button fullWidth sx={{ color: 'black', margin: 0, paddingX: 0, justifyContent: 'left' }}>
-                        <Add />
-                        <Typography marginLeft={'1rem'}>Add</Typography>
-                    </Button>
-                </Box>
-                <Box>
-                    <Button fullWidth sx={{ color: 'black', margin: 0, paddingX: 0, justifyContent: 'left' }}>
-                        <TickCircle />
-                        <Typography marginLeft={'1rem'}>Approve</Typography>
-                    </Button>
-                </Box>
-            </Box>
-            <Box justifyContent={'space-between'} display={'flex'} flexDirection={'column'} marginX={'1rem'}>
-                <Box borderBottom={'1px solid black'} paddingY="1rem" display={'flex'} flexDirection={'column'} justifyContent={'space-between'}>
-                    <Box display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
-                        <Typography>All Teams</Typography>
-                        <Button sx={{ textTransform: 'none', color: 'black', margin: 0, paddingX: 0 }}>
-                            <ArrowDown2 />
+                        }}
+                        variant='standard'
+                        size='small'
+                        placeholder='search'
+
+                        sx={{ marginBottom: '5px', backgroundColor: '#fff', paddingX: '.5rem', paddingY: '.2rem', borderRadius: '.5rem' }}
+                        InputProps={{
+                            disableUnderline: true,
+                            startAdornment: <InputAdornment position="start"><SearchNormal /></InputAdornment>,
+                        }}
+                    />
+
+                    {/* {users1.map(user => <div key={user._id}><Box sx={{backgroundColor:'#fff', cursor: "pointer" }}>
+                        <Button onClick={() => {}} sx={{ color: "black" }}>
+                            {user.name}
+                        </Button>
+                    </Box></div>)} */}
+
+                    <Box>
+                        <Button onClick={myContext.toggleTeam} fullWidth sx={{ color: 'black', margin: 0, paddingX: 0, justifyContent: 'left' }}>
+                            <Add />
+                            <Typography marginLeft={'1rem'}>Add</Typography>
                         </Button>
                     </Box>
-                    <Box >
-                        <Button fullWidth sx={{ textTransform: 'none', color: 'grey.dark', justifyContent: 'left' }}>Development Team</Button>
-                    </Box>
                     <Box>
-                        <Button fullWidth sx={{ textTransform: 'none', color: 'grey.dark', justifyContent: 'left' }}>Test Team</Button>
-                    </Box>
-                </Box>
-                <Box borderBottom={'1px solid black'} paddingY="1rem" display={'flex'} flexDirection={'column'} justifyContent={'space-between'}>
-                    <Box display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
-                        <Typography>My Teams</Typography>
-                        <Button sx={{ textTransform: 'none', color: 'black', margin: 0, paddingX: 0 }}>
-                            <ArrowDown2 />
+                        <Button onClick={() => { props.setpage(1) }} fullWidth sx={{ color: 'black', margin: 0, paddingX: 0, justifyContent: 'left' }}>
+                            <TickCircle />
+                            <Typography marginLeft={'1rem'}>Approve</Typography>
                         </Button>
                     </Box>
-                    <Box >
-                        <Button fullWidth sx={{ textTransform: 'none', color: 'grey.dark', justifyContent: 'left' }}>Development Team</Button>
-                    </Box>
-                    <Box>
-                        <Button fullWidth sx={{ textTransform: 'none', color: 'grey.dark', justifyContent: 'left' }}>Test Team</Button>
-                    </Box>
                 </Box>
-                <Box paddingY="1rem" >
-                    <Button variant='contained' fullWidth sx={{ textTransform: 'none', justifyContent: 'left', borderRadius: '1rem' }}>All Users</Button>
+                <Box justifyContent={'space-between'} display={'flex'} flexDirection={'column'} marginX={'1rem'}>
+                    <Box borderBottom={'1px solid black'} paddingY="1rem" display={'flex'} flexDirection={'column'} justifyContent={'space-between'}>
+                        <Box display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                            <Typography>All Teams</Typography>
+
+                            <IconButton onClick={() => { setshowallteams(!showallteams) }} sx={{ textTransform: 'none', color: 'black', margin: 0, paddingX: 0 }}>
+                                <ArrowDown2 />
+                            </IconButton>
+                        </Box>
+                        {showallteams &&
+                            props.allTeams.map(team => {
+                                return (
+                                    <Box >
+                                        <Button
+                                            onClick={() => {
+                                                props.setpage(0)
+                                                props.settempteam(team)
+                                            }}
+                                            fullWidth sx={{ textTransform: 'none', color: 'grey.dark', justifyContent: 'left' }}>{team.name}</Button>
+                                    </Box>
+                                )
+                            })
+                        }
+                    </Box>
+                    <Box borderBottom={'1px solid black'} paddingY="1rem" display={'flex'} flexDirection={'column'} justifyContent={'space-between'}>
+                        <Box display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                            <Typography>My Teams</Typography>
+                            <IconButton onClick={() => { setshowmyteams(!showmyteams) }} sx={{ textTransform: 'none', color: 'black', margin: 0, paddingX: 0 }}>
+                                <ArrowDown2 />
+                            </IconButton>
+                        </Box>
+                        {showmyteams &&
+                            props.myTeams.map(team => {
+                                return (
+                                    <Box >
+                                        <Button
+                                            onClick={() => {
+                                                props.setpage(0)
+                                                props.settempteam(team)
+                                            }}
+                                            fullWidth sx={{ textTransform: 'none', color: 'grey.dark', justifyContent: 'left' }}>{team.name}</Button>
+                                    </Box>
+                                )
+                            })
+                        }
+                    </Box>
+                    <Box paddingY="1rem" >
+                        <Button onClick={() => { props.setpage(2) }} variant='contained' fullWidth sx={{ textTransform: 'none', justifyContent: 'left', borderRadius: '1rem' }}>All Users</Button>
+                    </Box>
                 </Box>
             </Box>
-        </Box>
-    )
+        )
+    }
 }
 
 export default Sidebarteams

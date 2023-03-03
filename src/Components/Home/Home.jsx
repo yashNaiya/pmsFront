@@ -6,6 +6,7 @@ import { Box, Stack } from '@mui/material';
 import Navigate from '../Navigate';
 import Sidebar from './Sidebar';
 import Homemain from './Homemain';
+import InviteBox from '../InviteBox';
 
 const Home = () => {
   const [rootUser, setrootUser] = useState()

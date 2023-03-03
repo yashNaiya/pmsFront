@@ -2,9 +2,12 @@ import { Box, Button } from '@mui/material'
 import React from 'react'
 import { Category, Notification, TaskSquare, ProfileAdd, Profile, People } from 'iconsax-react'
 import { useNavigate } from 'react-router-dom'
+import AppContext from './AppContext'
+import { useContext } from 'react'
 
 const Navigate = () => {
     const navigate = useNavigate()
+    const myContext = useContext(AppContext);
     return (
         <Box flex={.8} >
             <Box
@@ -32,7 +35,7 @@ const Navigate = () => {
                 <Button>
                     <People onClick={()=>{navigate('/teams')}} color='#fff' size={'2rem'} />
                 </Button>
-                <Button>
+                <Button onClick={myContext.toggleInvite}>
                     <ProfileAdd color='#fff' size={'2rem'} />
                 </Button>
                 <Button onClick={()=>{navigate('/profile')}}>
