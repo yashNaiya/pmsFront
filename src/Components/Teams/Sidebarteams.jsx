@@ -11,21 +11,34 @@ const Sidebarteams = (props) => {
     const [showallteams, setshowallteams] = useState(false)
     const [showmyteams, setshowmyteams] = useState(false)
     const myContext = useContext(AppContext)
+    const [users, setusers] = useState([])
+
+    const handleChange= (e)=>{
+        setsearch(e.target.value)
+
+        if(e.target.value===''){
+            setusers([])
+        }else{
+            api.post('/users',{_id:props.rootUser._id})
+            .then(res=>{
+              setusers(res.data)
+            })
+            .catch(err=>{})
+        }
+
+    }
+    
+    const users1 = users.filter(user => {
+        return user.name.includes(search) || user.email.includes(search)
+    })
+    
     if (props.allTeams && props.myTeams) {
         return (
             <Box flex={1} minHeight={'100vh'} bgcolor={'grey.main'}>
-                <Box minHeight={'22%'} borderBottom={'1px solid black'} justifyContent={'space-between'} display={'flex'} flexDirection={'column'} marginX={'1rem'} paddingBottom={'1rem'} paddingTop={'4rem'}>
+                <Box minHeight={'22vh'} borderBottom={'1px solid black'} justifyContent={'space-between'} display={'flex'} flexDirection={'column'} marginX={'1rem'} paddingBottom={'1rem'} paddingTop={'4rem'}>
                     <TextField
                         value={search}
-                        onChange={(e) => {
-                            setsearch(e.target.value)
-                            // users1 = props.users.filter(user => {
-                            //     return user.name.includes(search) || user.email.includes(search)
-                            // })
-                            // if (search === '') { users1 = [] }
-                            // console.log(users1)
-
-                        }}
+                        onChange={handleChange}
                         variant='standard'
                         size='small'
                         placeholder='search'
@@ -37,11 +50,11 @@ const Sidebarteams = (props) => {
                         }}
                     />
 
-                    {/* {users1.map(user => <div key={user._id}><Box sx={{backgroundColor:'#fff', cursor: "pointer" }}>
-                        <Button onClick={() => {}} sx={{ color: "black" }}>
+                    {users1.map(user => <div key={user._id}><Box paddingX='.5rem'marginY='.1rem' sx={{backgroundColor:'#fff', cursor: "pointer" ,borderRadius:'0.5rem'}}>
+                        <Button  fullWidth onClick={() => {}} sx={{ color: "black",textTransform: 'none',justifyContent: 'left' }}>
                             {user.name}
                         </Button>
-                    </Box></div>)} */}
+                    </Box></div>)}
 
                     <Box>
                         <Button onClick={myContext.toggleTeam} fullWidth sx={{ color: 'black', margin: 0, paddingX: 0, justifyContent: 'left' }}>

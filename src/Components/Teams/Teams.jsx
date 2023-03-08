@@ -52,10 +52,10 @@ const Teams = () => {
             <Navigate/>
             <Box flex={16}>
             <Stack direction={'row'} justifyContent='space-between'>
-              <Sidebarteams settempteam={settempteam} myTeams={myTeams} allTeams={allTeams} users={users} setpage={setpage}/>
+              <Sidebarteams settempteam={settempteam} myTeams={myTeams} allTeams={allTeams} rootUser={rootUser} setpage={setpage}/>
               {page===1 && <ApprovePage/>
               ||
-              page===0 && <Teamsmain users={users} tempteam={tempteam}/>
+              page===0 && <Teamsmain users={users} rootUser={rootUser} tempteam={tempteam}/>
               ||
               page===2 && <AllUsers users={users}/>
               }

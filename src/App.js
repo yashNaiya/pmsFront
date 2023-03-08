@@ -16,7 +16,7 @@ import AddTeamBox from "./Components/AddTeamBox";
 function App() {
   const [invite, setinvite] = useState(false)
   const [team, setteam] = useState(false)
-
+  const [add, setadd] = useState(false)
   const toggleTeam = ()=>{
     team?setteam(false):setteam(true)
   }

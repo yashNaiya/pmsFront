@@ -33,7 +33,7 @@ const Teamsmain = (props) => {
             pagination: false,
         }
         let columns = []
-        if (edit) {
+        if (edit && props.rootUser) {
             columns = ['name', 'role', 'number',
                 {
                     name: '', options: {
@@ -42,9 +42,11 @@ const Teamsmain = (props) => {
                                 <Box>
                                     <IconButton onClick={() => {
                                         console.log(tableMeta.rowData)
-                                        api.post('/reomvefromteam', { user: tableMeta.rowData, team: props.tempteam })
-                                            .then(res => { alert(res.data.message)
-                                            window.location.reload(false)})
+                                        api.post('/reomvefromteam', { user: tableMeta.rowData, team: props.tempteam, rootUser: props.rootUser })
+                                            .then(res => {
+                                                alert(res.data.message)
+                                                window.location.reload(false)
+                                            })
                                             .catch(err => { })
                                     }}>
                                         <Trash />
@@ -60,7 +62,7 @@ const Teamsmain = (props) => {
         } else {
             columns = ['name', 'role', 'number']
         }
-        if (rename) {
+        if (rename && props.rootUser) {
             return (
                 <Box flex={5}>
                     <Box width={'40%'} height={'60%'} position={'absolute'} bgcolor={'#fff'}
@@ -85,7 +87,7 @@ const Teamsmain = (props) => {
                                 flexDirection={'row'} width={'50%'} >
                                 <Button variant='outlined' onClick={() => { setrename(false) }}>cancel</Button>
                                 <Button variant='contained' onClick={() => {
-                                    api.post('/renameteam', { name: props.tempteam.name, newname: newname })
+                                    api.post('/renameteam', { team: props.tempteam, rootUser: props.rootUser, newname: newname })
                                         .then(res => { alert(res.data.message) })
                                         .catch(err => { })
                                     setrename(false)
@@ -96,7 +98,7 @@ const Teamsmain = (props) => {
                 </Box>
             )
         }
-        if (remove) {
+        if (remove && props.rootUser) {
             return (
                 <Box flex={5}>
                     <Box width={'40%'} height={'60%'} position={'absolute'} bgcolor={'#fff'}
@@ -121,7 +123,7 @@ const Teamsmain = (props) => {
                                 flexDirection={'row'} width={'50%'} >
                                 <Button variant='contained'
                                     onClick={() => {
-                                        api.post('/deleteteam', props.tempteam)
+                                        api.post('/deleteteam', { team: props.tempteam, rootUser: props.rootUser })
                                             .then(res => {
                                                 alert(res.data.message)
                                                 setremove(false)
@@ -140,7 +142,7 @@ const Teamsmain = (props) => {
                 </Box>
             )
         }
-        if (invite) {
+        if (invite && props.rootUser) {
             const columns = ["name", "email", "number", "role"];
             const options = {
                 filter: true,
@@ -182,13 +184,13 @@ const Teamsmain = (props) => {
                                 index.map(i => {
                                     console.log(props.users[i.index])
                                     selectedUsers.push(props.users[i.index])
-                                    api.post('/addusers', { users: selectedUsers, team: props.tempteam })
+                                })
+                                api.post('/addusers', { users: selectedUsers, team: props.tempteam, rootUser: props.rootUser })
                                         .then(res => {
                                             alert(res.data.message)
                                             window.location.reload(false)
                                         })
                                         .catch(err => { })
-                                })
                             }}>add</Button>
                         </Box>
                     </Box>

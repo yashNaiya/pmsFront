@@ -18,22 +18,21 @@ const AddTeamBox = () => {
     useEffect(() => {
       api.get("/profile", { withCredentials: true })
               .then(res => {
-                  setrootUser(res.data.rootUser)
-                  
-                  
+                  setrootUser(res.data.rootUser) 
+                 
               }).catch((err) => {
                   
               })
     }, [])
   
     useEffect(() => {
-      if(rootUser){
-        api.post('/users',{_id:rootUser._id})
-        .then(res=>{
-          setusers(res.data)
-        })
-        .catch(err=>{})
-      }
+        if(rootUser){
+            api.post('/users',{_id:rootUser._id})
+            .then(res=>{
+              setusers(res.data)
+            })
+            .catch(err=>{})
+          }
     }, [rootUser])
 
     const handleChange = (event) => {
@@ -61,7 +60,7 @@ const AddTeamBox = () => {
         },
     };
 
-    if (myContext.teamValue && !(users==='')) {
+    if (myContext.teamValue && users) {
         return (
             <Box width={'40%'} height={'70%'} position={'absolute'} bgcolor={'#fff'}
                 boxShadow={'rgba(0, 0, 0, 0.35) 0px 5px 20px'}

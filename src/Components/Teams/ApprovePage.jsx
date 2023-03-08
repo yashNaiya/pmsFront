@@ -8,6 +8,7 @@ import { CloseCircle, FolderOpen, Zoom } from 'iconsax-react';
 const ApprovePage = () => {
     const [teams, setteams] = useState()
     const [tempteam, settempteam] = useState()
+    const [action, setaction] = useState()
     const [showteam, setshowteam] = useState(false)
     useEffect(() => {
         api.get('/notapprovedteams')
@@ -16,6 +17,9 @@ const ApprovePage = () => {
                 setteams(res.data)
             })
             .catch(e => { })
+        api.get('/actionnotapproved')
+            .then(res=>{setaction(res.data)})
+            .catch()
     }, [])
 
 
@@ -84,9 +88,9 @@ const ApprovePage = () => {
                                 }}>
                                 Approve
                             </Button>
-                            <Button variant='outlined' 
-                            onClick={() => {
-                                api.post('/deleteteam', { name: tableMeta.rowData[0] })
+                            <Button variant='outlined'
+                                onClick={() => {
+                                    api.post('/deleteteam', { name: tableMeta.rowData[0] })
                                         .then(res => {
                                             alert(res.data.message)
                                             api.get('/notapprovedteams')
@@ -97,7 +101,7 @@ const ApprovePage = () => {
                                                 .catch(e => { })
                                         })
                                         .catch(err => { })
-                            }}>
+                                }}>
                                 delete
                             </Button>
                         </Box>
@@ -106,6 +110,54 @@ const ApprovePage = () => {
                 },
             }
         }];
+        const columns2 = [
+             {
+            name: "name",
+            options: {
+                customBodyRender: (value, tableMeta, updateValue) => (
+                    <div>{value.name}</div>
+                )
+            }
+        },
+        "action",
+            {
+                name: "by",
+                options: {
+                    customBodyRender: (value, tableMeta, updateValue) => (
+                        <Box>{value.name}</Box>
+                    )
+                }
+            },
+            "metadata",
+            {
+                name: 'Action', options: {
+                    customBodyRender: (value, tableMeta, updateValue) => {
+                        return (
+                            <Box>
+                                <Button sx={{ marginRight: '1rem' }} variant='contained'
+                                    onClick={() => {
+                                        // console.log(tableMeta.rowData)
+                                       api.post('/approveaction',{data:tableMeta.rowData})
+                                       .then(res=>{alert(res.data.message)})
+                                       .catch()
+                                    }}>
+                                    Approve
+                                </Button>
+                                <Button variant='outlined'
+                                    onClick={() => {
+                                        api.post('/rejectaction',{data:tableMeta.rowData})
+                                        .then(res=>{alert(res.data.message)})
+                                        .catch()
+                                    }}>
+                                    delete
+                                </Button>
+                            </Box>
+    
+                        )
+                    },
+                }
+            }
+        ];
     const options = {
         filter: true,
         selectableRows: false,
@@ -126,6 +178,16 @@ const ApprovePage = () => {
                         data={teams}
                         columns={columns}
                         options={options} />
+
+                </Box>
+                <Box margin={'5%'}>
+
+                    <MUIDataTable
+                        title={'Teams Update'}
+                        data={action}
+                        columns={columns2}
+                        options={options} />
+
                 </Box>
             </Box>
         )
