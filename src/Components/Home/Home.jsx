@@ -12,6 +12,11 @@ import InviteBox from '../InviteBox';
 const Home = () => {
   const [rootUser, setrootUser] = useState()
   const [add, setadd] = useState(false)
+  const [users, setusers] = useState()
+  const [selectedworkspacedata, setselectedworkspacedata] = useState()
+  const [selectedproject, setselectedproject] = useState()
+  const [selectedworkspace, setselectedworkspace] = useState()
+  const [addworkspace, setaddworkspace] = useState(false)
   const [addproject, setaddproject] = useState(false)
   const [addcustomer, setaddcustomer] = useState(false)
   const navigate = useNavigate()
@@ -28,6 +33,27 @@ const Home = () => {
   useEffect(() => {
     callHomePage();
   }, [])
+
+  useEffect(() => {
+    if(rootUser){
+      api.post('/users',{_id:rootUser._id})
+      .then(res=>{
+        setusers(res.data)
+      })
+      .catch(err=>{})
+    }
+  }, [rootUser])
+
+  useEffect(() => {
+    if(selectedworkspace){
+       api.post('/currentworkspace',selectedworkspace)
+       .then(res=>{
+        console.log(res.data)
+        setselectedworkspacedata(res.data)
+      })
+       .catch(err=>{})
+    }
+  }, [selectedworkspace])
   if (rootUser) {
 
     return (
@@ -36,8 +62,24 @@ const Home = () => {
           <Navigate/>
           <Box flex={16}>
             <Stack direction={'row'} justifyContent='space-between'>
-              <Sidebar setadd={setadd} />
-              <Homemain setadd={setadd} setaddcustomer={setaddcustomer} setaddproject={setaddproject} add={add} addcustomer={addcustomer} addproject={addproject} />
+              <Sidebar 
+              setadd={setadd} 
+              setselectedworkspace={setselectedworkspace} 
+              setaddworkspace={setaddworkspace} 
+              addworkspace={addworkspace}
+              setselectedproject={setselectedproject}
+              selectedworkspacedata={selectedworkspacedata}/>
+              <Homemain 
+              users={users}
+              setadd={setadd} 
+              setaddcustomer={setaddcustomer} 
+              setaddproject={setaddproject} 
+              add={add} 
+              rootUser={rootUser}
+              addcustomer={addcustomer} 
+              addproject={addproject}
+              selectedworkspacedata={selectedworkspacedata}
+              selectedproject={selectedproject} />
             </Stack>
           </Box>
         </Stack>

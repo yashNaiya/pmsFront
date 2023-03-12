@@ -12,6 +12,7 @@ import InviteBox from "./Components/InviteBox";
 import React, { useState } from 'react';
 import AppContext from './Components/AppContext';
 import AddTeamBox from "./Components/AddTeamBox";
+import ProfileView from "./Components/ProfileView";
 
 function App() {
   const [invite, setinvite] = useState(false)
@@ -43,6 +44,7 @@ function App() {
         <Route path="/mywork" element={<Mywork />}></Route>
         <Route path="/notification" element={<Notification />}></Route>
         <Route path="/profile" element={<Profile />}></Route>
+        <Route path="/profileView" element={<ProfileView />}></Route>
       </Routes>
     </Box>
     </AppContext.Provider>
