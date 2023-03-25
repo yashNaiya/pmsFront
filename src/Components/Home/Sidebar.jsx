@@ -2,9 +2,10 @@ import { Box, Button, FormControl, IconButton, InputLabel, ListItemText, Menu, M
 import { Add, CloseCircle, More, TickCircle, Warning2 } from 'iconsax-react'
 import React, { useEffect, useState } from 'react'
 import api from '../../Api';
-import image from '../../Assets/Team.gif'
-
+import AppContext from './../AppContext'
+import { useContext } from 'react'
 const Sidebar = (props) => {
+    const myContext = useContext(AppContext);
     const [workspace, setworkspace] = useState()
     const [wslist, setwslist] = useState()
     const [cList, setcList] = useState()
@@ -47,7 +48,6 @@ const Sidebar = (props) => {
                 .catch(err => { })
         }
     }, [props.selectedworkspacedata])
-
     if (wslist) {
         return (
             <Box flex={1} minHeight={'100vh'} bgcolor={'grey.main'}>
@@ -86,10 +86,10 @@ const Sidebar = (props) => {
                             label="Workspace"
                         >
                             {props.addworkspace && <Box>
-                                <TextField value={workspace} onChange={(e) => { setworkspace(e.target.value) }} variant='standard'></TextField>
+                                <TextField value={workspace} onChange={(e) => { setworkspace(e.target.value); localStorage.setItem("ws",e.target.value._id) }} variant='standard'></TextField>
                                 <Button onClick={() => {
                                     console.log(workspace)
-                                    api.post('/createworkspace', { name: workspace })
+                                    api.post('/createworkspace', { name: workspace,admin:props.rootUser })
                                         .then(res => { alert(res.data.message); setworkspace('') })
                                         .catch(err => { console.log(err) })
                                 }}>add</Button>
@@ -120,12 +120,13 @@ const Sidebar = (props) => {
                         </Button>
                     </Box>
                 </Box>
+                
                 {props.selectedworkspacedata && cList && pList && 
                 <Box justifyContent={'space-between'} display={'flex'} flexDirection={'column'} marginX={'1rem'}  >
                     <Box display={'flex'} flexDirection={'column'} borderBottom={'1px solid black'} justifyContent={'space-between'} paddingY={'1rem'}>
                     <Typography>Clients</Typography>
                         {
-                            cList.client.map((client, index) => (
+                            cList.map((client, index) => (
                                 <Box key={index} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
                                     <Typography variant='body2'>{client.name}</Typography>
                                     <IconButton
@@ -159,8 +160,8 @@ const Sidebar = (props) => {
                     <Box paddingY={'1rem'}>
                         <Typography>Projects</Typography>
                         {
-                            // console.log(pList.projects)
-                            pList.projects.map((project, index) => (
+                            // // console.log(pList.projects)
+                            pList.map((project, index) => (
                                 <Box key={index}>
                                     <Button onClick={()=>{props.setselectedproject(project)}} fullWidth sx={{ textTransform: 'none', color: 'grey.dark', justifyContent: 'left' }}>{project.name}</Button>
                                 </Box>

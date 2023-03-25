@@ -10,6 +10,12 @@ import ApprovePage from './ApprovePage'
 import AllUsers from './AllUsers'
 import api from '../../Api'
 const Teams = () => {
+  useEffect(() => {
+    let ws = localStorage.getItem('ws')
+    setwsId(ws)
+  }, [])
+  
+  const [wsId, setwsId] = useState()
   const [users, setusers] = useState()
   const [tempteam, settempteam] = useState()
   const [rootUser, setrootUser] = useState()
@@ -33,8 +39,8 @@ const Teams = () => {
   }, [])
 
   useEffect(() => {
-    if(rootUser){
-      api.post('/users',{_id:rootUser._id})
+    if(rootUser && wsId){
+      api.post('/users',{_id:rootUser._id,wsId:wsId})
       .then(res=>{
         setusers(res.data)
       })

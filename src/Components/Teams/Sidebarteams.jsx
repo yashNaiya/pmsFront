@@ -7,31 +7,40 @@ import { useContext } from 'react'
 import api from '../../Api'
 
 const Sidebarteams = (props) => {
+    useEffect(() => {
+        let ws = localStorage.getItem('ws')
+        setwsId(ws)
+    }, [])
+
+    const [wsId, setwsId] = useState()
     const [search, setsearch] = useState()
     const [showallteams, setshowallteams] = useState(false)
     const [showmyteams, setshowmyteams] = useState(false)
     const myContext = useContext(AppContext)
     const [users, setusers] = useState([])
 
-    const handleChange= (e)=>{
+    const handleChange = (e) => {
         setsearch(e.target.value)
-
-        if(e.target.value===''){
-            setusers([])
-        }else{
-            api.post('/users',{_id:props.rootUser._id})
-            .then(res=>{
-              setusers(res.data)
-            })
-            .catch(err=>{})
+        if (wsId) {
+            if (e.target.value === '') {
+                setusers([])
+            } else {
+                api.post('/users', { _id: props.rootUser._id, wsId: wsId })
+                    .then(res => {
+                        setusers(res.data)
+                    })
+                    .catch(err => { })
+            }
+        } else {
+            alert('select workspace')
         }
 
     }
-    
+
     const users1 = users.filter(user => {
         return user.name.includes(search) || user.email.includes(search)
     })
-    
+
     if (props.allTeams && props.myTeams) {
         return (
             <Box flex={1} minHeight={'100vh'} bgcolor={'grey.main'}>
@@ -50,8 +59,13 @@ const Sidebarteams = (props) => {
                         }}
                     />
 
-                    {users1.map(user => <div key={user._id}><Box paddingX='.5rem'marginY='.1rem' sx={{backgroundColor:'#fff', cursor: "pointer" ,borderRadius:'0.5rem'}}>
-                        <Button  fullWidth onClick={() => {}} sx={{ color: "black",textTransform: 'none',justifyContent: 'left' }}>
+                    {users1.map(user => <div key={user._id}><Box paddingX='.5rem' marginY='.1rem' sx={{ backgroundColor: '#fff', cursor: "pointer", borderRadius: '0.5rem' }}>
+                        <Button fullWidth
+                            onClick={() => {
+                                localStorage.setItem("viewedProfile", user._id)
+                                window.open("/ProfileView", "_blank")
+                            }}
+                            sx={{ color: "black", textTransform: 'none', justifyContent: 'left' }}>
                             {user.name}
                         </Button>
                     </Box></div>)}

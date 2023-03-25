@@ -17,36 +17,42 @@ import ProfileView from "./Components/ProfileView";
 function App() {
   const [invite, setinvite] = useState(false)
   const [team, setteam] = useState(false)
-  const [add, setadd] = useState(false)
-  const toggleTeam = ()=>{
-    team?setteam(false):setteam(true)
+  const [workspace, setworkspace] = useState()
+  const setWorkspace = (e)=>{
+    setworkspace(e.target.value)
   }
-  const toggleInvite = ()=>{
-    invite?setinvite(false):setinvite(true)
+  const toggleTeam = () => {
+    team ? setteam(false) : setteam(true)
+  }
+  const toggleInvite = () => {
+    invite ? setinvite(false) : setinvite(true)
   }
   const userSettings = {
-    inviteValue : invite,
-    teamValue : team,
+    inviteValue: invite,
+    teamValue: team,
+    workspace:workspace,
+    setWorkspace:setWorkspace,
     toggleTeam,
     toggleInvite
   }
   return (
     <AppContext.Provider value={userSettings}>
-    <Box>
-      <AddTeamBox/>
-      <InviteBox/>
-      <Routes>
-        <Route path="/" element={<Landing />}></Route>
-        <Route path="/login" element={<Login />}></Route>
-        <Route path="/register" element={<Signup />}></Route>
-        <Route path="/home" element={<Home />}></Route>
-        <Route path="/teams" element={<Teams />}></Route>
-        <Route path="/mywork" element={<Mywork />}></Route>
-        <Route path="/notification" element={<Notification />}></Route>
-        <Route path="/profile" element={<Profile />}></Route>
-        <Route path="/profileView" element={<ProfileView />}></Route>
-      </Routes>
-    </Box>
+      <Box>
+        <AddTeamBox />
+        <InviteBox />
+        <Routes>
+          <Route path="/" element={<Landing />}></Route>
+          <Route path="/login" element={<Login />}></Route>
+          <Route path='/register/:id/:email' element={<Signup />}></Route>
+          <Route path="/register" element={<Signup />}></Route>
+          <Route path="/home" element={<Home />}></Route>
+          <Route path="/teams" element={<Teams />}></Route>
+          <Route path="/mywork" element={<Mywork />}></Route>
+          <Route path="/notification" element={<Notification />}></Route>
+          <Route path="/profile" element={<Profile />}></Route>
+          <Route path="/profileView" element={<ProfileView />}></Route>
+        </Routes>
+      </Box>
     </AppContext.Provider>
   );
 }

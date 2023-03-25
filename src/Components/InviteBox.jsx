@@ -11,15 +11,20 @@ const InviteBox = () => {
 
     const [email, setemail] = useState()
     const myContext = useContext(AppContext);
+    const id = localStorage.getItem('ws')
     if (myContext.inviteValue) {
-        const handleInvite = ()=>{
-            // console.log(email)
-            api.post('/sendinvite',{to:email})
-            .then(res=>{
-                console.log(res.data)
-                // alert(res.messagee)
-            })
-            .catch(err=>{console.log(err)})
+
+        const handleInvite = () => {
+            if (email === '') {
+                alert("enter the email")
+            } else {
+                api.post('/sendinvite', { to: email, _id: id })
+                    .then(res => {
+                        console.log(res.data)
+                        // alert(res.messagee)
+                    })
+                    .catch(err => { console.log(err) })
+            }
         }
         return (
             <Box
@@ -38,7 +43,7 @@ const InviteBox = () => {
                     height={'80%'}>
 
                     <img alt='' src={image} position='center' width={'50%'}></img>
-                    <TextField value={email} onChange={(e)=>{
+                    <TextField value={email} onChange={(e) => {
                         setemail(e.target.value)
                     }} size='small' label='email'></TextField>
                     <Button variant='contained' onClick={handleInvite}>Send Invite</Button>

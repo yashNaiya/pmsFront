@@ -22,10 +22,15 @@ const Homemain = (props) => {
         }
     };
 
+    const reloadProject = () =>{
+        api.post("/readproject",{_id:props.selectedproject._id})
+        .then(res=>{
+            props.setselectedproject(res.data)
+        }).catch()
+    }
     let selectedUsers = []
     const handleChange = (e) => {
         setsearch(e.target.value)
-        console.log(search)
     }
 
     if (props.add) {
@@ -81,7 +86,6 @@ const Homemain = (props) => {
                                     console.log(index)
                                     selectedUsers = []
                                     index.map(i => {
-                                        console.log(props.users[i.index])
                                         selectedUsers.push(props.users[i.index])
                                     })
                                     api.post('/addusers', { users: selectedUsers, team: props.tempteam, rootUser: props.rootUser })
@@ -97,7 +101,7 @@ const Homemain = (props) => {
                 )
             }
             else {
-                
+                console.log(props.selectedproject)
                 return (
                     <Box flex={5}>
                         <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
@@ -113,7 +117,7 @@ const Homemain = (props) => {
                                 onClick={()=>{
                                     handleClose()
                                     api.post('/addgroup',{wsID:props.selectedworkspacedata._id,name:groupName,projectID:props.selectedproject._id})
-                                    .then(res=>{})
+                                    .then(res=>{reloadProject()})
                                     .catch()
                                     }}>Add</Button>
                             </DialogActions>
@@ -152,7 +156,7 @@ const Homemain = (props) => {
                                 <Box>
                                     {
                                         props.selectedproject.groups.map((group,index)=>(
-                                            <Group key={index} group={group} />
+                                            <Group reloadProject={reloadProject} rootUser= {props.rootUser}  wsId={props.selectedworkspacedata._id} project={props.selectedproject} key={index} group={group} />
                                         ))
                                     }
                                     

@@ -48,7 +48,6 @@ const Home = () => {
     if(selectedworkspace){
        api.post('/currentworkspace',selectedworkspace)
        .then(res=>{
-        console.log(res.data)
         setselectedworkspacedata(res.data)
       })
        .catch(err=>{})
@@ -67,6 +66,7 @@ const Home = () => {
               setselectedworkspace={setselectedworkspace} 
               setaddworkspace={setaddworkspace} 
               addworkspace={addworkspace}
+              rootUser={rootUser}
               setselectedproject={setselectedproject}
               selectedworkspacedata={selectedworkspacedata}/>
               <Homemain 
@@ -74,6 +74,7 @@ const Home = () => {
               setadd={setadd} 
               setaddcustomer={setaddcustomer} 
               setaddproject={setaddproject} 
+              setselectedproject={setselectedproject}
               add={add} 
               rootUser={rootUser}
               addcustomer={addcustomer} 

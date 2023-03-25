@@ -7,6 +7,12 @@ import Select from '@mui/material/Select';
 import { useContext } from 'react'
 import api from '../Api'
 const AddTeamBox = () => {
+    useEffect(() => {
+        let ws = localStorage.getItem('ws')
+        setwsId(ws)
+    }, [])
+
+    const [wsId, setwsId] = useState()
     const myContext = useContext(AppContext);
     const ITEM_HEIGHT = 48;
     const ITEM_PADDING_TOP = 8;
@@ -27,7 +33,7 @@ const AddTeamBox = () => {
   
     useEffect(() => {
         if(rootUser){
-            api.post('/users',{_id:rootUser._id})
+            api.post('/users',{_id:rootUser._id,wsId:wsId})
             .then(res=>{
               setusers(res.data)
             })
