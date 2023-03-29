@@ -4,21 +4,23 @@ import MUIDataTable from 'mui-datatables'
 import { Button, IconButton, Typography } from '@mui/material';
 import api from '../../Api';
 import { CloseCircle, FolderOpen, Zoom } from 'iconsax-react';
-
+import AppContext from '../AppContext'
+import { useContext } from 'react'
 const ApprovePage = () => {
+    const myContext = useContext(AppContext)
     const [teams, setteams] = useState()
     const [tempteam, settempteam] = useState()
     const [action, setaction] = useState()
     const [showteam, setshowteam] = useState(false)
     useEffect(() => {
-        api.get('/notapprovedteams')
+        api.post('/notapprovedteams', { wsId: myContext.workspace._id })
             .then(res => {
                 console.log(res.data)
                 setteams(res.data)
             })
             .catch(e => { })
-        api.get('/actionnotapproved')
-            .then(res=>{setaction(res.data)})
+        api.post('/actionnotapproved',{ wsId: myContext.workspace._id})
+            .then(res => { setaction(res.data) })
             .catch()
     }, [])
 
@@ -77,7 +79,7 @@ const ApprovePage = () => {
                                     api.post('/approveteam', { name: tableMeta.rowData[0] })
                                         .then(res => {
                                             alert(res.data.message)
-                                            api.get('/notapprovedteams')
+                                            api.post('/notapprovedteams', { wsId: myContext.workspace._id })
                                                 .then(res => {
                                                     console.log(res.data)
                                                     setteams(res.data)
@@ -90,10 +92,10 @@ const ApprovePage = () => {
                             </Button>
                             <Button variant='outlined'
                                 onClick={() => {
-                                    api.post('/deleteteam', { name: tableMeta.rowData[0] })
+                                    api.post('/rejectteam', { name: tableMeta.rowData[0] })
                                         .then(res => {
                                             alert(res.data.message)
-                                            api.get('/notapprovedteams')
+                                            api.post('/notapprovedteams', { wsId: myContext.workspace._id })
                                                 .then(res => {
                                                     console.log(res.data)
                                                     setteams(res.data)
@@ -110,8 +112,8 @@ const ApprovePage = () => {
                 },
             }
         }];
-        const columns2 = [
-             {
+    const columns2 = [
+        {
             name: "name",
             options: {
                 customBodyRender: (value, tableMeta, updateValue) => (
@@ -120,44 +122,44 @@ const ApprovePage = () => {
             }
         },
         "action",
-            {
-                name: "by",
-                options: {
-                    customBodyRender: (value, tableMeta, updateValue) => (
-                        <Box>{value.name}</Box>
-                    )
-                }
-            },
-            "metadata",
-            {
-                name: 'Action', options: {
-                    customBodyRender: (value, tableMeta, updateValue) => {
-                        return (
-                            <Box>
-                                <Button sx={{ marginRight: '1rem' }} variant='contained'
-                                    onClick={() => {
-                                        // console.log(tableMeta.rowData)
-                                       api.post('/approveaction',{data:tableMeta.rowData})
-                                       .then(res=>{alert(res.data.message)})
-                                       .catch()
-                                    }}>
-                                    Approve
-                                </Button>
-                                <Button variant='outlined'
-                                    onClick={() => {
-                                        api.post('/rejectaction',{data:tableMeta.rowData})
-                                        .then(res=>{alert(res.data.message)})
-                                        .catch()
-                                    }}>
-                                    delete
-                                </Button>
-                            </Box>
-    
-                        )
-                    },
-                }
+        {
+            name: "by",
+            options: {
+                customBodyRender: (value, tableMeta, updateValue) => (
+                    <Box>{value.name}</Box>
+                )
             }
-        ];
+        },
+        "metadata",
+        {
+            name: 'Action', options: {
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <Box>
+                            <Button sx={{ marginRight: '1rem' }} variant='contained'
+                                onClick={() => {
+                                    // console.log(tableMeta.rowData)
+                                    api.post('/approveaction', { data: tableMeta.rowData })
+                                        .then(res => { alert(res.data.message) })
+                                        .catch()
+                                }}>
+                                Approve
+                            </Button>
+                            <Button variant='outlined'
+                                onClick={() => {
+                                    api.post('/rejectaction', { data: tableMeta.rowData })
+                                        .then(res => { alert(res.data.message) })
+                                        .catch()
+                                }}>
+                                delete
+                            </Button>
+                        </Box>
+
+                    )
+                },
+            }
+        }
+    ];
     const options = {
         filter: true,
         selectableRows: false,

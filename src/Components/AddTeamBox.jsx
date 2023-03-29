@@ -53,7 +53,7 @@ const AddTeamBox = () => {
     const handleCreate = ()=>{
         console.log(teamName)
         console.log(personName)
-        api.post('/createteam',{teamName,personName,rootUser})
+        api.post('/createteam',{teamName,personName,rootUser,workspace:myContext.workspace})
         .then(res=>{alert(res.data.message)})
         .catch(err=>{})
     }

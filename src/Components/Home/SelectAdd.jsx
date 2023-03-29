@@ -2,21 +2,24 @@ import { Box, Button, FormControl, FormControlLabel, FormLabel, IconButton, list
 import { Add, CloseCircle, Folder, Profile } from 'iconsax-react'
 import React, { useEffect, useState } from 'react'
 import api from '../../Api';
+import AppContext from '../AppContext'
+import { useContext } from 'react'
 
 const SelectAdd = (props) => {
+    const myContext = useContext(AppContext)
     const [value, setValue] = useState('customer');
     const [manager, setmanager] = useState({ name: "" })
     const [contactList, setcontactList] = useState([])
     const [requirementList, setrequirementList] = useState([])
     const [users, setusers] = useState([])
-
+    
     const handleSearchChange = (e) => {
         setmanager(e.target.value)
 
         if (e.target.value === '') {
             setusers([])
         } else {
-            api.post('/users', { _id: props.rootUser._id })
+            api.post('/users', { _id: props.rootUser._id, wsId: myContext.workspace._id })
                 .then(res => {
                     setusers(res.data)
                 })
@@ -93,8 +96,9 @@ const SelectAdd = (props) => {
     const handleCustomerAdd = () => {
         if (customerData.name == '' || customerData.number == '' || customerData.email == '' || customerData.location == '' || customerData.website == '') {
             alert("Insufficient Information Provided")
+            setadd(false)
         } else {
-            api.post('/addcustomer', { customerData: customerData, _id: props.selectedworkspacedata._id })
+            api.post('/addcustomer', { customerData: customerData, _id: props.selectedworkspacedata._id, contactList:contactList })
                 .then(res => {
                     alert(res.data.message)
                     setcustomerData({
@@ -105,6 +109,7 @@ const SelectAdd = (props) => {
                         website: ""
                     })
                 })
+                setadd(false)
                 .catch(err => { console.log(err) })
         }
 
@@ -131,9 +136,11 @@ const SelectAdd = (props) => {
         } else {
             if (projectData.name == '' || projectData.due == '') {
                 alert("Insufficient Information Provided")
+                setadd(false)
             } else {
                 api.post('/addproject', { projectData: data, _id: props.selectedworkspacedata._id })
-                    .then(res => { alert(res.data.message) })
+                    .then(res => { alert(res.data.message)
+                        setadd(false) })
                     .catch(err => { console.log(err) })
             }
         }

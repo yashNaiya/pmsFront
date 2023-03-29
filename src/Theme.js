@@ -1,29 +1,33 @@
 import { createTheme } from "@mui/material";
-
 const theme = createTheme({
-    typography:{
-        fontFamily:'Inter',
+    typography: {
+        fontFamily: 'Inter',
     },
-    palette:{
-        primary:{
-            main:'#314d78',
-            light:'#58739c'
+    palette: {
+        primary: {
+            main: '#314d78',
+            light: '#58739c',
+            shadow: `rgba(49, 77, 120, .2)`
         },
-        red:{
-            main:'#FD8A8A'
+        red: {
+            main: '#FD8A8A'
         },
-        green:{
-            main:'#B6E2A1'
+        green: {
+            main: '#B6E2A1'
         },
-        orange:{
-            main:"#FEBE8C"
+        greyDark:{
+            main:'#75757529'
         },
-        grey:{
-            main:'#D9D9D9',
-            dark:'#5a5757'
+        orange: {
+            main: "#FEBE8C"
+        },
+        grey: {
+            main: '#D9D9D9',
+            dark: '#5a5757',
+            light: '#'
         }
     },
-    
+
 })
 
 export default theme;

@@ -11,14 +11,13 @@ const Sidebarteams = (props) => {
         let ws = localStorage.getItem('ws')
         setwsId(ws)
     }, [])
-
     const [wsId, setwsId] = useState()
     const [search, setsearch] = useState()
     const [showallteams, setshowallteams] = useState(false)
     const [showmyteams, setshowmyteams] = useState(false)
     const myContext = useContext(AppContext)
     const [users, setusers] = useState([])
-
+     
     const handleChange = (e) => {
         setsearch(e.target.value)
         if (wsId) {
@@ -44,7 +43,7 @@ const Sidebarteams = (props) => {
     if (props.allTeams && props.myTeams) {
         return (
             <Box flex={1} minHeight={'100vh'} bgcolor={'grey.main'}>
-                <Box minHeight={'22vh'} borderBottom={'1px solid black'} justifyContent={'space-between'} display={'flex'} flexDirection={'column'} marginX={'1rem'} paddingBottom={'1rem'} paddingTop={'4rem'}>
+                <Box borderBottom={'1px solid black'} justifyContent={'space-between'} display={'flex'} flexDirection={'column'} marginX={'1rem'} paddingBottom={'1rem'} paddingTop={'4rem'}>
                     <TextField
                         value={search}
                         onChange={handleChange}
@@ -63,25 +62,25 @@ const Sidebarteams = (props) => {
                         <Button fullWidth
                             onClick={() => {
                                 localStorage.setItem("viewedProfile", user._id)
-                                window.open("/ProfileView", "_blank")
+                                window.open("/profileview", "_blank")
                             }}
                             sx={{ color: "black", textTransform: 'none', justifyContent: 'left' }}>
                             {user.name}
                         </Button>
                     </Box></div>)}
 
-                    <Box>
-                        <Button onClick={myContext.toggleTeam} fullWidth sx={{ color: 'black', margin: 0, paddingX: 0, justifyContent: 'left' }}>
+                    <Box marginTop={'1rem'}>
+                        <Button variant='contained' onClick={myContext.toggleTeam} fullWidth sx={{ color: 'black', margin: 0, paddingX: 0, justifyContent: 'left',backgroundColor:'primary.shadow'  }}>
                             <Add />
                             <Typography marginLeft={'1rem'}>Add</Typography>
                         </Button>
                     </Box>
-                    <Box>
-                        <Button onClick={() => { props.setpage(1) }} fullWidth sx={{ color: 'black', margin: 0, paddingX: 0, justifyContent: 'left' }}>
+                    {props.isAdmin && <Box marginTop={'1rem'}>
+                        <Button variant='contained' onClick={() => { props.setpage(1) }} fullWidth sx={{ color: 'black', margin: 0, paddingX: 0, justifyContent: 'left',backgroundColor:'primary.shadow'  }}>
                             <TickCircle />
                             <Typography marginLeft={'1rem'}>Approve</Typography>
                         </Button>
-                    </Box>
+                    </Box>}
                 </Box>
                 <Box justifyContent={'space-between'} display={'flex'} flexDirection={'column'} marginX={'1rem'}>
                     <Box borderBottom={'1px solid black'} paddingY="1rem" display={'flex'} flexDirection={'column'} justifyContent={'space-between'}>
@@ -133,6 +132,12 @@ const Sidebarteams = (props) => {
                         <Button onClick={() => { props.setpage(2) }} variant='contained' fullWidth sx={{ textTransform: 'none', justifyContent: 'left', borderRadius: '1rem' }}>All Users</Button>
                     </Box>
                 </Box>
+            </Box>
+        )
+    } else {
+        return (
+            <Box flex={1}>
+                <Typography>Loading....</Typography>
             </Box>
         )
     }

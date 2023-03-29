@@ -4,8 +4,11 @@ import { AddCircle, ArrowDown2, ArrowRight2, Message, People, Profile } from 'ic
 import React, { useEffect, useState } from 'react'
 import api from '../../Api'
 import Task from './Task'
+import AppContext from '../AppContext'
+import { useContext } from 'react'
 
 const Group = (props) => {
+    const myContext = useContext(AppContext)
     useEffect(() => {
         let ws = localStorage.getItem('ws')
         setwsId(ws)
@@ -45,7 +48,7 @@ const Group = (props) => {
         if (e.target.value === '') {
             setusers([])
         } else {
-            api.get('/allteams')
+            api.post('/allteams',{ wsId: myContext.workspace._id })
                 .then(res => {
                     setteams(res.data)
                 })

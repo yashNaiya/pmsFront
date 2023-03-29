@@ -1,4 +1,4 @@
-import { Stack } from '@mui/material'
+import { Stack, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import React, { useEffect, useState } from 'react'
 import Navigate from '../Navigate'
@@ -10,79 +10,103 @@ import ApprovePage from './ApprovePage'
 import AllUsers from './AllUsers'
 import api from '../../Api'
 const Teams = () => {
-  useEffect(() => {
-    let ws = localStorage.getItem('ws')
-    setwsId(ws)
-  }, [])
-  
+  const myContext = useContext(AppContext)
+
+
+
   const [wsId, setwsId] = useState()
   const [users, setusers] = useState()
   const [tempteam, settempteam] = useState()
   const [rootUser, setrootUser] = useState()
   const [myTeams, setmyTeams] = useState()
   const [allTeams, setallTeams] = useState()
+  const [isAdmin, setisAdmin] = useState(false)
+
   useEffect(() => {
-    api.get("/profile", { withCredentials: true })
+    let wsId = localStorage.getItem('ws')
+    if (wsId) {
+      setwsId(wsId)
+      api.post('/currentworkspace', { _id: wsId })
+        .then(res => {
+          myContext.setWorkspace(res.data)
+          api.get("/profile", { withCredentials: true })
             .then(res => {
-                setrootUser(res.data.rootUser)
-                api.post('/myteams',{rootUser:res.data.rootUser})
-                .then(res=>{
-                  setmyTeams(res.data)
-                })
-                .catch(err=>{})
+              setrootUser(res.data.rootUser)
+              // console.log(res.data.rootUser._id)
+              // console.log(myContext.workspace.admin)
+
+
             }).catch((err) => {
-                
+
             })
-    api.get('/allteams')
-    .then(res=>{setallTeams(res.data)})
+        })
+    }
+
 
   }, [])
 
+  // console.log(isAdmin)
   useEffect(() => {
-    if(rootUser && wsId){
-      api.post('/users',{_id:rootUser._id,wsId:wsId})
-      .then(res=>{
-        setusers(res.data)
-      })
-      .catch(err=>{})
+    if (rootUser && wsId) {
+      api.post('/users', { _id: rootUser._id, wsId: wsId })
+        .then(res => {
+          setusers(res.data)
+        })
+        .catch(err => { })
+      api.post('/myteams', { rootUser: rootUser, wsId: myContext.workspace._id })
+        .then(res => {
+          setmyTeams(res.data)
+        })
+        .catch(err => { })
+      api.post('/allteams', { wsId: myContext.workspace._id })
+        .then(res => { setallTeams(res.data); })
+      if (rootUser._id === myContext.workspace.admin) {
+        setisAdmin(true)
+      }
+
     }
+
   }, [rootUser])
-  
-  
+
+
   const [page, setpage] = useState(0)
-  const myContext = useContext(AppContext)
-  if(!myContext.teamValue){
+
+
+  if (!myContext.teamValue && myContext.workspace && myTeams && allTeams) {
+    // console.log(myContext.workspace)
     return (
       <Box>
-          <Stack direction={'row'} justifyContent='space-between'>
-            <Navigate/>
-            <Box flex={16}>
+        <Stack direction={'row'} justifyContent='space-between'>
+          <Navigate />
+          <Box flex={16}>
             <Stack direction={'row'} justifyContent='space-between'>
-              <Sidebarteams settempteam={settempteam} myTeams={myTeams} allTeams={allTeams} rootUser={rootUser} setpage={setpage}/>
-              {page===1 && <ApprovePage/>
-              ||
-              page===0 && <Teamsmain users={users} rootUser={rootUser} tempteam={tempteam}/>
-              ||
-              page===2 && <AllUsers users={users}/>
+              <Sidebarteams isAdmin={isAdmin} settempteam={settempteam} myTeams={myTeams} allTeams={allTeams} rootUser={rootUser} setpage={setpage} />
+              {page === 1 && <ApprovePage />
+                ||
+                page === 0 && <Teamsmain isAdmin={isAdmin} users={users} rootUser={rootUser} tempteam={tempteam} />
+                ||
+                page === 2 && <AllUsers users={users} />
               }
             </Stack>
-            </Box>
-          </Stack>
-        </Box>
+          </Box>
+        </Stack>
+      </Box>
     )
   }
-  else{
-    return(
+  else {
+    return (
       <Box>
-          <Stack direction={'row'} justifyContent='space-between'>
-            <Navigate />
-            <Box flex={16}>
-            
-            </Box>
-          </Stack>
-        </Box>
+        <Stack direction={'row'} justifyContent='space-between'>
+          <Navigate />
+          <Box flex={16} alignItems='center' height='100vh' display='flex' justifyContent={'center'} flexDirection='column'>
+            <Typography sx={{ fontFamily: 'Alkatra', opacity: '.4' }} fontSize={'45px'} >Error!!!</Typography>
+            <Typography sx={{ fontFamily: 'Alkatra', opacity: '.4' }} fontSize={'45px'}>No workspace selected</Typography>
+          </Box>
+        </Stack>
+      </Box>
     )
   }
+
 }
 
 export default Teams

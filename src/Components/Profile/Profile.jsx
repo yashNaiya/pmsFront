@@ -68,6 +68,7 @@ const Profile = () => {
         api.post('/signout', { rootUserId: rootUser._id }, { withCredentials: true })
             .then(res => {
                 alert(res.data)
+                localStorage.clear()
             })
         navigate('/')
     }

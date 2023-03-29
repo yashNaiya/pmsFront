@@ -1,5 +1,5 @@
 import { Box, Button, FormControl, IconButton, InputLabel, ListItemText, Menu, MenuItem, Select, TextField, Typography } from '@mui/material'
-import { Add, CloseCircle, More, TickCircle, Warning2 } from 'iconsax-react'
+import { Add, ArrowDown, ArrowDown2, ArrowRight2, CloseCircle, More, TickCircle, Warning2 } from 'iconsax-react'
 import React, { useEffect, useState } from 'react'
 import api from '../../Api';
 import AppContext from './../AppContext'
@@ -7,6 +7,8 @@ import { useContext } from 'react'
 const Sidebar = (props) => {
     const myContext = useContext(AppContext);
     const [workspace, setworkspace] = useState()
+    const [showClients, setshowClients] = useState(false)
+    const [showProjects, setshowProjects] = useState(false)
     const [wslist, setwslist] = useState()
     const [cList, setcList] = useState()
     const [pList, setpList] = useState()
@@ -21,6 +23,7 @@ const Sidebar = (props) => {
     const handleClick1 = (event) => {
         console.log(event.currentTarget)
         setAnchorEl(event.currentTarget);
+        
     };
 
     const handleClick2 = (event) => {
@@ -35,7 +38,14 @@ const Sidebar = (props) => {
                 setwslist(res.data)
             })
             .catch()
+
     }, [])
+    useEffect(() => {
+        // console.log(props.selectedworkspacedata)
+
+        myContext.setWorkspace(props.selectedworkspacedata)
+    }, [props.selectedworkspacedata])
+
     useEffect(() => {
         if (props.selectedworkspacedata) {
             // console.log("hellloooo")
@@ -48,14 +58,16 @@ const Sidebar = (props) => {
                 .catch(err => { })
         }
     }, [props.selectedworkspacedata])
+ 
+
     if (wslist) {
         return (
             <Box flex={1} minHeight={'100vh'} bgcolor={'grey.main'}>
-                <Box minHeight={'30vh'} borderBottom={'1px solid black'} justifyContent={'space-between'} display={'flex'} flexDirection={'column'} marginX={'1rem'} paddingBottom={'1rem'} paddingTop={'4rem'}>
+                <Box borderBottom={'1px solid black'} justifyContent={'space-between'} display={'flex'} flexDirection={'column'} marginX={'1rem'} paddingBottom={'1rem'} paddingTop={'4rem'}>
                     <Box display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
-                        {props.selectedworkspacedata && <Typography>{props.selectedworkspacedata.name}</Typography>
-                            || <Typography>Workspace</Typography>}
-                        <IconButton
+                        {myContext.workspace && <Typography fontSize={'20px'} fontWeight={'bold'}>{myContext.workspace.name}</Typography>
+                            || <Typography fontSize={'20px'} fontWeight={'bold'}>Workspace</Typography>}
+                        {props.isAdmin && <IconButton
                             sx={{ color: 'black' }}
                             onClick={handleClick1}
                             bgcolor='green.main' flex={4}
@@ -63,7 +75,7 @@ const Sidebar = (props) => {
                             aria-haspopup="true"
                             aria-expanded={Open ? 'true' : undefined}>
                             <More />
-                        </IconButton>
+                        </IconButton>}
                         <Menu
                             id="basic-menu"
                             anchorEl={anchorEl}
@@ -86,11 +98,11 @@ const Sidebar = (props) => {
                             label="Workspace"
                         >
                             {props.addworkspace && <Box>
-                                <TextField value={workspace} onChange={(e) => { setworkspace(e.target.value); localStorage.setItem("ws",e.target.value._id) }} variant='standard'></TextField>
+                                <TextField value={workspace} onChange={(e) => { setworkspace(e.target.value); localStorage.setItem("ws", e.target.value._id) }} variant='standard'></TextField>
                                 <Button onClick={() => {
                                     console.log(workspace)
-                                    api.post('/createworkspace', { name: workspace,admin:props.rootUser })
-                                        .then(res => { alert(res.data.message); setworkspace('') })
+                                    api.post('/createworkspace', { name: workspace, admin: props.rootUser })
+                                        .then(res => { alert(res.data.message); setworkspace(''); props.setaddworkspace(false) })
                                         .catch(err => { console.log(err) })
                                 }}>add</Button>
                                 <IconButton onClick={() => { props.setaddworkspace(false) }}><CloseCircle /></IconButton>
@@ -98,7 +110,7 @@ const Sidebar = (props) => {
                             {!props.addworkspace &&
                                 <Box>
                                     {wslist.map((ws) => (
-                                        <MenuItem onClick={() => { props.setselectedworkspace(ws); localStorage.setItem("ws", ws._id) }} key={ws._id} value={ws.name}>
+                                        <MenuItem  onClick={() => { props.setselectedworkspace(ws); localStorage.setItem("ws", ws._id) }} key={ws._id} value={ws.name}>
                                             <ListItemText primary={ws.name} />
                                         </MenuItem>
                                     ))}
@@ -107,68 +119,56 @@ const Sidebar = (props) => {
                             }
                         </Select>
                     </FormControl>
-                    <Box>
-                        <Button onClick={() => { props.setadd(true) }} fullWidth sx={{ color: 'black', margin: 0, paddingX: 0, justifyContent: 'left' }}>
+                    {props.isAdmin && <Box marginTop='1rem'>
+                        <Button variant='contained' onClick={() => { props.setadd(true) }} fullWidth sx={{ color: 'black', margin: 0, paddingX: 0, justifyContent: 'left', backgroundColor: 'primary.shadow' }}>
                             <Add />
                             <Typography marginLeft={'1rem'}>Add</Typography>
                         </Button>
-                    </Box>
-                    <Box>
-                        <Button onClick={() => { }} fullWidth sx={{ color: 'black', margin: 0, paddingX: 0, justifyContent: 'left' }}>
+                    </Box>}
+                    {props.isAdmin && <Box marginTop='1rem'>
+                        <Button variant='contained' onClick={() => { }} fullWidth sx={{ color: 'black', margin: 0, paddingX: 0, justifyContent: 'left', backgroundColor: 'primary.shadow' }}>
                             <TickCircle />
                             <Typography marginLeft={'1rem'}>Approve</Typography>
                         </Button>
-                    </Box>
+                    </Box>}
                 </Box>
-                
-                {props.selectedworkspacedata && cList && pList && 
-                <Box justifyContent={'space-between'} display={'flex'} flexDirection={'column'} marginX={'1rem'}  >
-                    <Box display={'flex'} flexDirection={'column'} borderBottom={'1px solid black'} justifyContent={'space-between'} paddingY={'1rem'}>
-                    <Typography>Clients</Typography>
-                        {
-                            cList.map((client, index) => (
-                                <Box key={index} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
-                                    <Typography variant='body2'>{client.name}</Typography>
-                                    <IconButton
-                                        sx={{ color: 'black' }}
-                                        onClick={handleClick2}
-                                        bgcolor='green.main' flex={4}
-                                        aria-controls={Open2 ? 'basic-menu' : undefined}
-                                        aria-haspopup="true"
-                                        aria-expanded={Open2 ? 'true' : undefined}>
-                                        <More />
-                                    </IconButton>
-                                    <Menu
-                                        id="basic-menu"
-                                        anchorEl={anchorEl2}
-                                        open={Open2}
-                                        onClose={handleClose2}
-                                        MenuListProps={{
-                                            'aria-labelledby': 'basic-button',
-                                        }}
-                                    >
-                                        <MenuItem onClick={() => { setAnchorEl2(null); }}>Rename</MenuItem>
-                                        <MenuItem onClick={() => { setAnchorEl2(null); }}>Manage</MenuItem>
-                                        <MenuItem onClick={() => { setAnchorEl2(null); }}>Delete</MenuItem>
-                                    </Menu>
-                                </Box>
-                            ))
+
+                {props.selectedworkspacedata && cList && pList &&
+                    <Box justifyContent={'space-between'} display={'flex'} flexDirection={'column'} marginX={'1rem'}  >
+                        {props.isAdmin && <Box display={'flex'} flexDirection={'column'} borderBottom={'1px solid black'} justifyContent={'space-between'} paddingY={'1rem'}>
+                            <Box display='flex' flexDirection={'row'} alignItems='center' justifyContent={'space-between'} borderRadius={'.5rem'} width='100%' paddingX='.3rem' sx={{ backgroundColor: 'greyDark.main' }}>
+                                <Typography>Clients</Typography>
+                                <IconButton onClick={() => { setshowClients(!showClients) }} sx={{ justifyContent: 'left' }}>
+                                    {showClients ? <ArrowDown2 /> : <ArrowRight2 />}
+                                </IconButton>
+                            </Box>
+                            {showClients &&
+                                cList.map((client, index) => (
+                                    <Box key={index}>
+                                        <Button onClick={() => { props.setselectedclient(client) }} fullWidth sx={{ textTransform: 'none', color: 'grey.dark', justifyContent: 'left' }}>{client.name}</Button>
+                                    </Box>
+                                ))
 
 
-                        }
+                            }
+                        </Box>}
+                        <Box paddingY={'1rem'}>
+                            <Box display='flex' flexDirection={'row'} alignItems='center' justifyContent={'space-between'} borderRadius={'.5rem'} width='100%' paddingX='.3rem' sx={{ backgroundColor: 'greyDark.main' }}>
+                                <Typography>Projects</Typography>
+                                <IconButton onClick={() => { setshowProjects(!showProjects) }} sx={{ justifyContent: 'left' }}>
+                                    {showProjects ? <ArrowDown2 /> : <ArrowRight2 />}
+                                </IconButton>
+                            </Box>
+                            {showProjects &&
+                                // // console.log(pList.projects)
+                                pList.map((project, index) => (
+                                    <Box key={index}>
+                                        <Button onClick={() => { props.setselectedproject(project) }} fullWidth sx={{ textTransform: 'none', color: 'grey.dark', justifyContent: 'left' }}>{project.name}</Button>
+                                    </Box>
+                                ))
+                            }
+                        </Box>
                     </Box>
-                    <Box paddingY={'1rem'}>
-                        <Typography>Projects</Typography>
-                        {
-                            // // console.log(pList.projects)
-                            pList.map((project, index) => (
-                                <Box key={index}>
-                                    <Button onClick={()=>{props.setselectedproject(project)}} fullWidth sx={{ textTransform: 'none', color: 'grey.dark', justifyContent: 'left' }}>{project.name}</Button>
-                                </Box>
-                            ))
-                        }
-                    </Box>
-                </Box>
                     ||
                     <Box marginX={'1rem'} display='flex' alignItems={'center'} justifyContent='left' flexDirection={'row'}>
                         <Typography color={'grey'}>select workspace</Typography>

@@ -6,29 +6,29 @@ const Task = (props) => {
     const [anchorEl, setAnchorEl] = useState(null)
     const [color, setcolor] = useState()
     let tempcolor = ''
-    const setcolorFun = ()=>{
-        if(props.task.status==='error'){
+    const setcolorFun = () => {
+        if (props.task.status === 'error') {
             tempcolor = 'red.main'
-        }else if(props.task.status==='on hold'){
+        } else if (props.task.status === 'on hold') {
             tempcolor = 'grey.main'
-        }else if(props.task.status==='working'){
+        } else if (props.task.status === 'working') {
             tempcolor = 'orange.main'
         }
     }
-    const changeStatus = (changedColor)=>{
-        if(props.task.owner._id===props.rootUser._id){
+    const changeStatus = (changedColor) => {
+        if (props.task.owner._id === props.rootUser._id) {
             setcolor(changedColor)
-        }else{
+        } else {
             alert('you are not authorized to change the state of this task')
         }
-        
+
     }
     useEffect(() => {
-      setcolor(tempcolor)
+        setcolor(tempcolor)
     }, [tempcolor])
-    
-    if(props){
-        
+
+    if (props) {
+
         setcolorFun()
         const handleClick = (event) => {
             console.log(event.currentTarget)
@@ -38,12 +38,24 @@ const Task = (props) => {
             setAnchorEl(null);
         };
         const Open = Boolean(anchorEl);
-    
+
         return (
-            <Stack  paddingX='.2rem' paddingY='.1rem' margin={'auto'} width={'99%'} direction={'row'} justifyContent='space-between'>
+            <Stack paddingX='.2rem' paddingY='.1rem' margin={'auto'} width={'99%'} direction={'row'} justifyContent='space-between'>
                 <Box textAlign={'center'} alignSelf='center' flex={5}><Typography>{props.task.name}</Typography></Box>
                 <Box textAlign={'center'} alignSelf='center' flex={2}><IconButton><Message /></IconButton></Box>
-                <Box textAlign={'center'} alignSelf='center' flex={2}><IconButton>{props.task.ownerType === 'solo' ? <Profile /> : <People />}</IconButton></Box>
+                <Box textAlign={'center'} alignSelf='center' flex={2}>
+                    <IconButton 
+                    onClick={()=>{
+                        if(props.task.ownerType === 'solo'){
+                            localStorage.setItem('viewedProfile',props.task.owner._id)
+                            window.open("/profileview", "_blank")
+                        }else{
+                            localStorage.setItem('ViewedTeam',props.task.owner._id)
+                            window.open("/teamview", "_blank")
+                        }
+                    }}
+                    >{props.task.ownerType === 'solo' ? <Profile /> : <People />}</IconButton>
+                </Box>
                 <Box sx={{ ":hover": { cursor: 'pointer' } }}
                     onClick={handleClick}
                     textAlign={'center'} bgcolor={color} flex={4}
@@ -65,7 +77,7 @@ const Task = (props) => {
                     <MenuItem sx={{ width: '5rem', height: '2rem', backgroundColor: 'green.main' }} onClick={() => { setAnchorEl(null); changeStatus('green.main') }}></MenuItem>
                     <MenuItem sx={{ width: '5rem', height: '2rem', backgroundColor: 'orange.main' }} onClick={() => { setAnchorEl(null); changeStatus('orange.main') }}></MenuItem>
                     <MenuItem sx={{ width: '5rem', height: '2rem', backgroundColor: 'grey.main' }} onClick={() => { setAnchorEl(null); changeStatus('grey.main') }}></MenuItem>
-                    <MenuItem sx={{ width: '5rem', height: '2rem', backgroundColor: 'red.main' }} onClick={() => { setAnchorEl(null); changeStatus('red.main')}} ></MenuItem>
+                    <MenuItem sx={{ width: '5rem', height: '2rem', backgroundColor: 'red.main' }} onClick={() => { setAnchorEl(null); changeStatus('red.main') }} ></MenuItem>
                 </Menu>
                 <Box textAlign={'center'} alignSelf='center' flex={3}><Typography>{props.task.due.split('T')[0]}</Typography></Box>
                 <Box textAlign={'center'} alignSelf='center' flex={3}><Typography>{props.task.linkedTo}</Typography></Box>

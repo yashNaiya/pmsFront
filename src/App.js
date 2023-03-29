@@ -9,17 +9,22 @@ import Mywork from "./Components/Mywork/Mywork";
 import Notification from "./Components/Notification/Notification";
 import { Box } from "@mui/material";
 import InviteBox from "./Components/InviteBox";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AppContext from './Components/AppContext';
 import AddTeamBox from "./Components/AddTeamBox";
 import ProfileView from "./Components/ProfileView";
+import api from "./Api";
+import CssBaseline from "@mui/material/CssBaseline";
+import TeamView from "./TeamView";
+
 
 function App() {
+
   const [invite, setinvite] = useState(false)
   const [team, setteam] = useState(false)
   const [workspace, setworkspace] = useState()
-  const setWorkspace = (e)=>{
-    setworkspace(e.target.value)
+  const setWorkspace = (obj) => {
+    setworkspace(obj)
   }
   const toggleTeam = () => {
     team ? setteam(false) : setteam(true)
@@ -30,11 +35,23 @@ function App() {
   const userSettings = {
     inviteValue: invite,
     teamValue: team,
-    workspace:workspace,
-    setWorkspace:setWorkspace,
+    workspace: workspace,
+    setWorkspace: setWorkspace,
     toggleTeam,
     toggleInvite
   }
+  useEffect(() => {
+    let wsId = localStorage.getItem('ws')
+    if (wsId) {
+      api.post('/currentworkspace', { _id: wsId })
+        .then(res => {
+          setworkspace(res.data)
+        })
+
+      }
+    
+  }, [])
+
   return (
     <AppContext.Provider value={userSettings}>
       <Box>
@@ -50,7 +67,8 @@ function App() {
           <Route path="/mywork" element={<Mywork />}></Route>
           <Route path="/notification" element={<Notification />}></Route>
           <Route path="/profile" element={<Profile />}></Route>
-          <Route path="/profileView" element={<ProfileView />}></Route>
+          <Route path="/profileview" element={<ProfileView />}></Route>
+          <Route path="/teamview" element={<TeamView />}></Route>
         </Routes>
       </Box>
     </AppContext.Provider>

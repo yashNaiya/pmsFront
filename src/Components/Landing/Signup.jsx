@@ -9,19 +9,25 @@ import { useNavigate } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 
 const Signup = () => {
-    let staticE = false
-    useEffect(() => {
-        if(email){
-            staticE = true
-        }
-    }, [])
+
+
 
     const navigate = useNavigate()
     const { id, email } = useParams()
     const [otp, setotp] = useState()
     const [enteredOtp, setenteredOtp] = useState()
     // console.log(id)
-
+    useEffect(() => {
+        if (email && id) {
+            api.post('/isregistered', { wsId: id, userMail: email })
+                .then(res => {
+                    if (res.data.registered) {
+                        alert('You Have Been Added To New Workspace')
+                        navigate('/login')
+                    }
+                }).catch()
+        }
+    }, [email, id])
     let defaultemail = ""
     if (email) {
         defaultemail = email
@@ -72,7 +78,7 @@ const Signup = () => {
                     alert("password do not match")
                 } else {
                     if (parseInt(enteredOtp) === otp) {
-                        api.post("/register", {inputs:inputs,_id:id}, { withCredentials: true })
+                        api.post("/register", { inputs: inputs, _id: id }, { withCredentials: true })
                             .then(res => {
                                 if (res.status === 200) {
                                     alert(res.data.message)

@@ -3,6 +3,7 @@ import { Add, CloseCircle, Edit, More, ProfileAdd, SearchNormal } from 'iconsax-
 import MUIDataTable from 'mui-datatables'
 import React, { useEffect, useState } from 'react'
 import api from '../../Api'
+import ClientPage from './ClientPage'
 import Group from './Group'
 import SelectAdd from './SelectAdd'
 
@@ -15,18 +16,18 @@ const Homemain = (props) => {
     const handleClickOpen = () => {
         setOpen(true);
     };
-
+    // console.log(props.selectedclient)
     const handleClose = (event, reason) => {
         if (reason !== 'backdropClick') {
             setOpen(false);
         }
     };
 
-    const reloadProject = () =>{
-        api.post("/readproject",{_id:props.selectedproject._id})
-        .then(res=>{
-            props.setselectedproject(res.data)
-        }).catch()
+    const reloadProject = () => {
+        api.post("/readproject", { _id: props.selectedproject._id })
+            .then(res => {
+                props.setselectedproject(res.data)
+            }).catch()
     }
     let selectedUsers = []
     const handleChange = (e) => {
@@ -101,31 +102,31 @@ const Homemain = (props) => {
                 )
             }
             else {
-                console.log(props.selectedproject)
+                // console.log(props.selectedproject)
                 return (
                     <Box flex={5}>
                         <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
                             <DialogTitle>Add Group</DialogTitle>
                             <DialogContent>
                                 <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
-                                    <TextField value={groupName} onChange={(e)=>{setgroupName(e.target.value)}} placeholder='name' size='small'></TextField>
+                                    <TextField value={groupName} onChange={(e) => { setgroupName(e.target.value) }} placeholder='name' size='small'></TextField>
                                 </Box>
                             </DialogContent>
                             <DialogActions>
                                 <Button onClick={handleClose}>Cancel</Button>
-                                <Button variant='contained' 
-                                onClick={()=>{
-                                    handleClose()
-                                    api.post('/addgroup',{wsID:props.selectedworkspacedata._id,name:groupName,projectID:props.selectedproject._id})
-                                    .then(res=>{reloadProject()})
-                                    .catch()
+                                <Button variant='contained'
+                                    onClick={() => {
+                                        handleClose()
+                                        api.post('/addgroup', { wsID: props.selectedworkspacedata._id, name: groupName, projectID: props.selectedproject._id })
+                                            .then(res => { reloadProject() })
+                                            .catch()
                                     }}>Add</Button>
                             </DialogActions>
                         </Dialog>
                         <Box minHeight={'100vh'} direction={'column'} justifyContent='space-between'>
                             <Box display={'flex'} justifyContent={'space-between'} flexDirection={'column'} flex={.5} paddingX={'1rem'} borderBottom={'1px solid black'}>
                                 <Box marginX={'1rem'} marginTop={'4rem'} display={'flex'} justifyContent={'space-between'} flexDirection={'row'}>
-                                    <Typography sx={{marginBottom:'1rem'}} variant='h5'>{props.selectedproject.name}</Typography>
+                                    <Typography sx={{ marginBottom: '1rem' }} variant='h4'>{props.selectedproject.name}</Typography>
                                     <Box>
                                         <Button variant='outlined' onClick={() => setinvitetoproject(true)} sx={{ color: 'black' }}><ProfileAdd />invite</Button>
                                         <IconButton sx={{ color: 'black' }}><Edit /></IconButton>
@@ -139,7 +140,7 @@ const Homemain = (props) => {
                             </Box>
                             <Box flex={9} margin={'1rem'}>
                                 <Box display='flex' width='40%' justifyContent={'space-between'}>
-                                    <Button onClick={()=>handleClickOpen()} variant='contained'>add group</Button>
+                                    <Button onClick={() => handleClickOpen()} variant='contained'>add group</Button>
                                     <TextField
                                         value={search}
                                         onChange={handleChange}
@@ -155,11 +156,11 @@ const Homemain = (props) => {
                                 </Box>
                                 <Box>
                                     {
-                                        props.selectedproject.groups.map((group,index)=>(
-                                            <Group reloadProject={reloadProject} rootUser= {props.rootUser}  wsId={props.selectedworkspacedata._id} project={props.selectedproject} key={index} group={group} />
+                                        props.selectedproject.groups.map((group, index) => (
+                                            <Group reloadProject={reloadProject} rootUser={props.rootUser} wsId={props.selectedworkspacedata._id} project={props.selectedproject} key={index} group={group} />
                                         ))
                                     }
-                                    
+
                                 </Box>
                             </Box>
                         </Box>
@@ -168,12 +169,19 @@ const Homemain = (props) => {
             }
         }
 
-        else {
+        else if (props.selectedclient) {
+            return (
+                <Box flex={5}>
+                    <ClientPage rootUser={props.rootUser} setselectedproject={props.setselectedproject}  selectedclient={props.selectedclient} />
+                </Box>
+            )
+        } else {
             return (
                 <Box flex={5}>
 
                 </Box>
             )
+
         }
     }
 }
