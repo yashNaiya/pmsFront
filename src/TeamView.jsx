@@ -1,11 +1,14 @@
-import { Box } from '@mui/material'
+import { Box, Button } from '@mui/material'
+import MUIDataTable from 'mui-datatables'
 import React, { useEffect, useState } from 'react'
 import api from './Api'
 
 const TeamView = () => {
     const [team, setteam] = useState()
+  
+    let columns = ['name', 'role', 'number']
     useEffect(() => {
-        const _id = localStorage.getItem('ViewedTeam')
+        const _id = localStorage.getItem('viewedTeam')
         if (_id) {
             console.log(_id)
             api.post('/readteambyid', {_id:_id})
@@ -19,9 +22,28 @@ const TeamView = () => {
 
     console.log(team)
     if (team) {
+        const options = {
+            filter: true,
+            selectableRows: false,
+            filterType: "dropdown",
+            responsive: "standard",
+            rowsPerPage: 10,
+            print: false,
+            pagination: false,
+        }
         return (
-            <Box>
-                {team.name}
+            <Box flex={5}>
+               
+                <Box margin={'5%'}>
+                    {/* <Box display={'flex'} marginBottom='3rem' justifyContent='flex-end' alignItems={'center'}>
+                        
+                    </Box> */}
+                    <MUIDataTable
+                        title={team.name}
+                        data={team.members}
+                        columns={columns}
+                        options={options} />
+                </Box>
             </Box>
         )
     }

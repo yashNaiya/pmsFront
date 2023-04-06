@@ -14,15 +14,14 @@ import AppContext from './Components/AppContext';
 import AddTeamBox from "./Components/AddTeamBox";
 import ProfileView from "./Components/ProfileView";
 import api from "./Api";
-import CssBaseline from "@mui/material/CssBaseline";
 import TeamView from "./TeamView";
-
 
 function App() {
 
   const [invite, setinvite] = useState(false)
   const [team, setteam] = useState(false)
   const [workspace, setworkspace] = useState()
+  const [homepage, sethomepage] = useState(0)
   const setWorkspace = (obj) => {
     setworkspace(obj)
   }
@@ -36,28 +35,31 @@ function App() {
     inviteValue: invite,
     teamValue: team,
     workspace: workspace,
+    homepage:homepage,
+    sethomepage:sethomepage,
     setWorkspace: setWorkspace,
     toggleTeam,
     toggleInvite
   }
-  useEffect(() => {
-    let wsId = localStorage.getItem('ws')
-    if (wsId) {
-      api.post('/currentworkspace', { _id: wsId })
-        .then(res => {
-          setworkspace(res.data)
-        })
+  // useEffect(() => {
+  //   let wsId = localStorage.getItem('ws')
+  //   if (wsId) {
+  //     api.post('/currentworkspace', { _id: wsId })
+  //       .then(res => {
+  //         setworkspace(res.data)
+  //         // console.log(res.data)
+  //       })
 
-      }
+  //     }
     
-  }, [])
+  // }, [])
 
   return (
     <AppContext.Provider value={userSettings}>
       <Box>
         <AddTeamBox />
         <InviteBox />
-        <Routes>
+        <Routes >
           <Route path="/" element={<Landing />}></Route>
           <Route path="/login" element={<Login />}></Route>
           <Route path='/register/:id/:email' element={<Signup />}></Route>

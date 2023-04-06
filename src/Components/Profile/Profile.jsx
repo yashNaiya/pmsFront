@@ -42,24 +42,24 @@ const Profile = () => {
         setedit(false)
         setimageuploaded(false)
         const formdata = new FormData()
-        formdata.append('_id',rootUser._id)
+        formdata.append('_id', rootUser._id)
         formdata.append('name', rootUser.name)
         formdata.append('number', rootUser.number)
         formdata.append('role', rootUser.role)
         formdata.append('location', rootUser.location)
         formdata.append('email', rootUser.email)
         formdata.append('image', image)
-        if(image){
+        if (image) {
             api.post('/updateprofile', formdata)
                 .then(res => {
                     alert(res.data.message)
                 })
-                window.location.reload(false)
-        }else{
+            window.location.reload(false)
+        } else {
             api.post('/updateprofile2', rootUser)
-            .then(res => {
-                alert(res.data.message)
-            })
+                .then(res => {
+                    alert(res.data.message)
+                })
 
         }
     }
@@ -81,35 +81,35 @@ const Profile = () => {
                         <Box paddingTop={'3rem'} display={'flex'} flexDirection={'row'} justifyContent={'space-between'} alignItems={'end'}
                             flex={4} bgcolor={'grey.main'}>
                             {!edit && <Box overflow={'hidden'} borderRadius={'50%'} marginLeft={'5rem'} sx={{ translate: '0px 60px' }} border={'4px solid #314d78'}>
-                                {rootUser.image==='' && <img src={Localimage} position='center' alt='profile' width={'150'} height={'auto'} />
-                                ||
-                                <img src={SERVER_HOST+rootUser.image} position='center' alt='profile1' width={'150'} height={'auto'} />
+                                {rootUser.image === '' && <img src={Localimage} position='center' alt='profile' width={'150'} height={'auto'} />
+                                    ||
+                                    <img src={SERVER_HOST + rootUser.image} position='center' alt='profile1' width={'150'} height={'150'} />
                                 }
                             </Box> ||
-                                !imageuploaded && 
+                                !imageuploaded &&
                                 <Box overflow={'hidden'} borderRadius={'50%'} marginLeft={'5rem'} sx={{ translate: '0px 60px' }} border={'4px solid #314d78'}>
                                     <IconButton component="label">
-                                        <input hidden name='editImage' accept='image/*' 
-                                        onChange={(e) => {
-                                            setimageuploaded(true)
-                                            settempImg(URL.createObjectURL(e.target.files[0]))
-                                            setimage(e.target.files[0])
-                                         }} 
-                                         value={tempImg} type="file" />
-                                        <img src={Localimage} position='center' alt='profile2' width={'150'} height={'auto'} />
+                                        <input hidden name='editImage' accept='image/*'
+                                            onChange={(e) => {
+                                                setimageuploaded(true)
+                                                settempImg(URL.createObjectURL(e.target.files[0]))
+                                                setimage(e.target.files[0])
+                                            }}
+                                            value={tempImg} type="file" />
+                                        <img src={Localimage} position='center' alt='profile2' width={'150'} height={'150'} />
                                     </IconButton>
                                 </Box>
                                 ||
                                 imageuploaded && tempImg &&
                                 <Box overflow={'hidden'} borderRadius={'50%'} marginLeft={'5rem'} sx={{ translate: '0px 60px' }} border={'4px solid #314d78'}>
                                     <IconButton component="label">
-                                        <input hidden name='editImage' accept='image/*' 
-                                        onChange={(e) => {
-                                            settempImg(URL.createObjectURL(e.target.files[0]))
-                                            setimage(e.target.files[0])
-                                         }} 
+                                        <input hidden name='editImage' accept='image/*'
+                                            onChange={(e) => {
+                                                settempImg(URL.createObjectURL(e.target.files[0]))
+                                                setimage(e.target.files[0])
+                                            }}
 
-                                          type="file" />
+                                            type="file" />
                                         <img src={tempImg} position='center' alt='profile3' width={'150'} height={'auto'} />
                                     </IconButton>
                                 </Box>
@@ -142,7 +142,7 @@ const Profile = () => {
                                 <Typography sx={{ backgroundColor: 'grey.main' }} borderRadius={'.5rem'} width='40%' paddingLeft={3} paddingY={1}>{rootUser.number}</Typography>
                             </Box>
                         </Box> ||
-                            <Box width={'30%'} paddingY={'4rem'} paddingX={'8rem'} flex={6}>
+                            <Box width={'50%'} paddingY={'4rem'} paddingX={'8rem'} flex={6}>
                                 <Box marginBottom={5} display={'flex'} justifyContent={'flex-start'} flexDirection={'column'}>
                                     <Typography paddingY={1} marginRight={'5rem'}>Name</Typography>
                                     <TextField size='small' value={rootUser.name} name='name' onChange={handleChange} sx={{ backgroundColor: 'grey.main' }} borderRadius={'.5rem'} width='40%' paddingLeft={3} paddingY={1}></TextField>
@@ -163,8 +163,10 @@ const Profile = () => {
                                     <Typography paddingY={1} marginRight={'5rem'}>Number</Typography>
                                     <TextField size='small' value={rootUser.number} name='number' onChange={handleChange} sx={{ backgroundColor: 'grey.main' }} borderRadius={'.5rem'} width='40%' paddingLeft={3} paddingY={1}></TextField>
                                 </Box>
-                                <Button variant='contained' sx={{width:'6rem'}} onClick={handleSave}>save</Button>
-                                <Button variant='outlined' sx={{marginLeft:'3rem'}} onClick={()=>{setedit(false)}}>cancel</Button>
+                                <Box>
+                                    <Button variant='contained' sx={{ width: '6rem' }} onClick={handleSave}>save</Button>
+                                    <Button variant='outlined' sx={{ marginLeft: '3rem' }} onClick={() => { setedit(false) }}>cancel</Button>
+                                </Box>
                             </Box>
                         }
 

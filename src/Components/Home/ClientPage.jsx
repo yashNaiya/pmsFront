@@ -185,8 +185,8 @@ const ClientPage = (props) => {
                             InputLabelProps={{
                                 shrink: true,
                             }}
-                            InputProps={{
-                                min:"2023-03-20",
+                            inputProps={{
+                                min: new Date().toISOString().split('T')[0]
                             }}
                             name='due'
                             value={projectData.due}
@@ -355,7 +355,7 @@ const ClientPage = (props) => {
                                 {projects.map((project, index) => (
 
                                     <Box key={index} width={'17rem'} sx={{ ":hover": { cursor: 'pointer', boxShadow: "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px" } }}
-                                        onClick={() => { }} bgcolor={'primary.shadow'} borderRadius='.5rem' marginRight={'3rem'} display='flex' marginTop={'1rem'} padding='1rem' flexDirection='column'>
+                                        onClick={() => { props.setselectedproject(project); myContext.sethomepage(5)}} bgcolor={'primary.shadow'} borderRadius='.5rem' marginRight={'3rem'} display='flex' marginTop={'1rem'} padding='1rem' flexDirection='column'>
                                         <Box m='auto' >
                                             <img src={image} width='150px'></img>
                                         </Box>
@@ -374,6 +374,14 @@ const ClientPage = (props) => {
                                     onClick={() => { setprojectadd(true) }}
                                     variant='contained'
                                     sx={{ textTransform: 'none' }}><Add />Add New Project</Button>
+                            </Box>
+                            <Box marginTop={'1rem'} display='flex' flexDirection={'row'} justifyContent='flex-end'>
+                                <Button
+                                    onClick={() => { }}
+                                    variant='contained'
+                                    
+                                    color='red'
+                                    sx={{ textTransform: 'none',width:'12rem'}}>Delete Client</Button>
                             </Box>
                         </Box>
                     </Box>

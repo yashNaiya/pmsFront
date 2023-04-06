@@ -19,7 +19,7 @@ const ApprovePage = () => {
                 setteams(res.data)
             })
             .catch(e => { })
-        api.post('/actionnotapproved',{ wsId: myContext.workspace._id})
+        api.post('/actionnotapproved', { wsId: myContext.workspace._id })
             .then(res => { setaction(res.data) })
             .catch()
     }, [])
@@ -140,7 +140,12 @@ const ApprovePage = () => {
                                 onClick={() => {
                                     // console.log(tableMeta.rowData)
                                     api.post('/approveaction', { data: tableMeta.rowData })
-                                        .then(res => { alert(res.data.message) })
+                                        .then(res => {
+                                            alert(res.data.message)
+                                            api.post('/actionnotapproved', { wsId: myContext.workspace._id })
+                                                .then(res => { setaction(res.data) })
+                                                .catch()
+                                        })
                                         .catch()
                                 }}>
                                 Approve
@@ -148,7 +153,12 @@ const ApprovePage = () => {
                             <Button variant='outlined'
                                 onClick={() => {
                                     api.post('/rejectaction', { data: tableMeta.rowData })
-                                        .then(res => { alert(res.data.message) })
+                                        .then(res => {
+                                            alert(res.data.message)
+                                            api.post('/actionnotapproved', { wsId: myContext.workspace._id })
+                                                .then(res => { setaction(res.data) })
+                                                .catch()
+                                        })
                                         .catch()
                                 }}>
                                 delete

@@ -241,6 +241,9 @@ const SelectAdd = (props) => {
                             InputLabelProps={{
                                 shrink: true,
                             }}
+                            inputProps={{
+                                min: new Date().toISOString().split('T')[0]
+                            }}
                             name='due'
                             value={projectData.due}
                             onChange={handleChange2}
@@ -255,7 +258,6 @@ const SelectAdd = (props) => {
                             <IconButton onClick={() => {
                                 localStorage.setItem("viewedProfile", user._id)
                                 window.open("/ProfileView", "_blank")
-
                             }} sx={{ backgroundColor: '#fff' }}><Profile /></IconButton>
                         </Box></div>)}
                     </Box>

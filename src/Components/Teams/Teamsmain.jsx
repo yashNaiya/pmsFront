@@ -156,7 +156,7 @@ const Teamsmain = (props) => {
                 pagination: false,
 
                 onRowClick: () => {
-
+                    // console.log()
                 }
             }
             return (
