@@ -125,7 +125,7 @@ const Group = (props) => {
                                 >
                                     {
                                         props.project.requirements.map((req, index) => (
-                                            <MenuItem key={index} value={req.name}>{req.name}</MenuItem>
+                                            <MenuItem key={index} value={req}>{req.name}</MenuItem>
                                         ))
                                     }
                                 </Select>
@@ -195,6 +195,7 @@ const Group = (props) => {
                                         {
                                             manager:props.project.manager,
                                             projectId: props.project._id,
+                                            projectName:props.project.name,
                                             groupId: props.group._id,
                                             requirement: requirement,
                                             status: status,
@@ -218,11 +219,11 @@ const Group = (props) => {
                     <Stack sx={{ borderTopLeftRadius: '1rem', borderTopRightRadius: '1rem' }} bgcolor={'grey.main'} p='.2rem' margin={'auto'} width={'100%'} direction={'row'} justifyContent='space-between'>
                         {props.rootUser._id.toString()===props.project.manager._id.toString()
                         
-                        && <Box textAlign={'center'} flex={1}></Box>}
+                        && <Box textAlign={'center'} flex={2}></Box>}
                         <Box textAlign={'center'} flex={5}><Typography>Item</Typography></Box>
                         <Box textAlign={'center'} flex={2}></Box>
                         <Box textAlign={'center'} flex={2}><Typography>Owner</Typography></Box>
-                        <Box textAlign={'center'} flex={2}><Typography>Status</Typography></Box>
+                        <Box textAlign={'center'} flex={3}><Typography>Status</Typography></Box>
                         <Box textAlign={'center'} flex={3}><Typography>Due</Typography></Box>
                         <Box textAlign={'center'} flex={3}><Typography>Linked To</Typography></Box>
                     </Stack>

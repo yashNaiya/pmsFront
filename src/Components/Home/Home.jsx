@@ -17,6 +17,8 @@ const Home = () => {
   const [users, setusers] = useState()
   const [teams, setteams] = useState()
   const [isAdmin, setisAdmin] = useState(false)
+  const [invitetoproject, setinvitetoproject] = useState(false)
+  const [manageProject, setmanageProject] = useState(false)
   const [selectedworkspacedata, setselectedworkspacedata] = useState()
   const [selectedproject, setselectedproject] = useState()
   const [selectedclient, setselectedclient] = useState()
@@ -26,6 +28,8 @@ const Home = () => {
   const [addcustomer, setaddcustomer] = useState(false)
   const [renamews, setrenamews] = useState(false)
   const [deletews, setdeletews] = useState(false)
+  const [viewpage, setviewpage] = useState(0)
+
 
   const navigate = useNavigate()
   const callHomePage = () => {
@@ -99,11 +103,14 @@ const Home = () => {
                 setaddworkspace={setaddworkspace}
                 addworkspace={addworkspace}
                 rootUser={rootUser}
+                setviewpage={setviewpage}
                 setselectedproject={setselectedproject}
                 setselectedclient={setselectedclient}
                 selectedworkspacedata={selectedworkspacedata}
                 setrenamews={setrenamews}
-                setdeletews={setdeletews} />
+                setdeletews={setdeletews}
+                setmanageProject={setmanageProject}
+                setinvitetoproject={setinvitetoproject} />
               <Homemain
                 users={users}
                 teams={teams}
@@ -112,6 +119,12 @@ const Home = () => {
                 renamews={renamews}
                 deletews={deletews}
                 setadd={setadd}
+                manageProject={manageProject}
+                invitetoproject={invitetoproject}
+                setmanageProject={setmanageProject}
+                setinvitetoproject= {setinvitetoproject}
+                setviewpage={setviewpage}
+                viewpage={viewpage}
                 setaddcustomer={setaddcustomer}
                 setaddproject={setaddproject}
                 setselectedproject={setselectedproject}

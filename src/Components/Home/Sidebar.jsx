@@ -35,11 +35,7 @@ const Sidebar = (props) => {
     const Open = Boolean(anchorEl);
     const Open2 = Boolean(anchorEl2);
     useEffect(() => {
-        api.get('/readworkspaces')
-            .then(res => {
-                setwslist(res.data)
-            })
-            .catch()
+       
         let wsId = localStorage.getItem('ws')
         if (wsId) {
             api.post('/currentworkspace', { _id: wsId })
@@ -96,9 +92,18 @@ const Sidebar = (props) => {
                 .catch(err => { })
             }
         }
-    }, [myContext.workspace])
+    }, [props.isAdmin])
 
-
+    useEffect(() => {
+        if(props.rootUser){
+            api.post('/readworkspaces',{_id:props.rootUser._id})
+                .then(res => {
+                    setwslist(res.data)
+                })
+                .catch()
+        }
+    }, [props.rootUser])
+    
     if (wslist) {
         return (
             <Box flex={1} minHeight={'100vh'} bgcolor={'grey.main'}>
@@ -148,7 +153,7 @@ const Sidebar = (props) => {
                             {!props.addworkspace &&
                                 <Box>
                                     {wslist.map((ws) => (
-                                        <MenuItem onClick={() => { props.setselectedworkspace(ws); localStorage.setItem("ws", ws._id) }} key={ws._id} value={ws.name}>
+                                        <MenuItem onClick={() => { props.setselectedworkspace(ws); localStorage.setItem("ws", ws._id); myContext.sethomepage(0) }} key={ws._id} value={ws.name}>
                                             <ListItemText primary={ws.name} />
                                         </MenuItem>
                                     ))}
@@ -208,6 +213,9 @@ const Sidebar = (props) => {
                                             onClick={() => {
                                                 props.setselectedproject(project)
                                                 myContext.sethomepage(5)
+                                                props.setviewpage(0)
+                                                props.setinvitetoproject(false)
+                                                props.setmanageProject(false)
                                             }}
                                             fullWidth sx={{ textTransform: 'none', color: 'grey.dark', justifyContent: 'left' }}>{project.name}</Button>
                                     </Box>
