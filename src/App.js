@@ -22,8 +22,12 @@ function App() {
   const [team, setteam] = useState(false)
   const [workspace, setworkspace] = useState()
   const [homepage, sethomepage] = useState(0)
+  const [project, setproject] = useState()
   const setWorkspace = (obj) => {
     setworkspace(obj)
+  }
+  const setProject = (obj) =>{
+    setproject(obj)
   }
   const toggleTeam = () => {
     team ? setteam(false) : setteam(true)
@@ -36,8 +40,10 @@ function App() {
     teamValue: team,
     workspace: workspace,
     homepage:homepage,
+    project:project,
     sethomepage:sethomepage,
     setWorkspace: setWorkspace,
+    setProject:setProject,
     toggleTeam,
     toggleInvite
   }

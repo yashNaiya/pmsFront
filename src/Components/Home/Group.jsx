@@ -228,7 +228,7 @@ const Group = (props) => {
                         <Box textAlign={'center'} flex={3}><Typography>Linked To</Typography></Box>
                     </Stack>
                     {props.group.tasks.map((task, index) => (
-                        <Task group={props.group} project={props.project} rootUser={props.rootUser} key={index} task={task} />
+                        <Task reloadProject={props.reloadProject} group={props.group} project={props.project} rootUser={props.rootUser} key={index} task={task} />
                     ))}
                     {props.project.manager._id.toString() === props.rootUser._id.toString() && <IconButton onClick={() => { handleClickOpen2() }} sx={{ marginLeft: '1.2%',color:'primary.main' }}><AddCircle /></IconButton>}
                 </Box>

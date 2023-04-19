@@ -53,7 +53,7 @@ const Timeline = (props) => {
                     let backgroundColor = ''
                     if (event.status === 'error') {
                         backgroundColor = '#FD8A8A'
-                    } else if (event.status === 'completed') {
+                    } else if (event.status === 'complete') {
                         backgroundColor = '#B6E2A1'
                     } else if (event.status === 'on hold') {
                         backgroundColor = '#D9D9D9'

@@ -9,7 +9,7 @@ const Navigate = () => {
     const navigate = useNavigate()
     const myContext = useContext(AppContext);
     return (
-        <Box flex={.8} >
+        <Box sx={{zIndex: '1000'}} m={0} flex={.8} >
             <Box
             position={'fixed'} height={'100vh'}
             sx={{

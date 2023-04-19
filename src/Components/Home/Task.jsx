@@ -43,18 +43,18 @@ const Task = (props) => {
         }
 
     }
-    // useEffect(() => {
-    //     console.log(props.project.requirements)
-    //     if(props.project && props.task){
-    //         props.project.requirements.forEach(obj => {
-    //             if(obj._id.toString()===props.task.linkedTo._id.toString()){
-    //                 console.log(obj.name)
-    //                 setreq(obj)
-    //             }
-    //         })
-    //     }
+    useEffect(() => {
+        // console.log(props.project.requirements)
+        if(props.project && props.task){
+            props.project.requirements.forEach(obj => {
+                if(obj._id.toString()===props.task.linkedTo._id.toString()){
+                    console.log(obj.name)
+                    setreq(obj)
+                }
+            })
+        }
       
-    // }, [props.task])
+    }, [props.task])
     
     const handleSearchChange2 = (e) => {
         setowner(e.target.value)
@@ -156,6 +156,7 @@ const Task = (props) => {
         };
         const Open = Boolean(anchorEl);
         if (props.Mywork) {
+            console.log(req)
             return (
                 <Stack
                     sx={{ boxShadow: " rgba(50, 50, 93, 0.25) 0px 6px 12px , rgba(0, 0, 0, 0.3) 0px 3px 12px" }}
@@ -220,7 +221,7 @@ const Task = (props) => {
                                     >
                                         {
                                             props.project.requirements.map((req, index) => (
-                                                <MenuItem key={index} value={req.name}>{req.name}</MenuItem>
+                                                <MenuItem key={index} value={req}>{req.name}</MenuItem>
                                             ))
                                         }
                                     </Select>
@@ -306,6 +307,7 @@ const Task = (props) => {
                                                 name: taskData.name,
                                                 due: taskData.due
                                             }).then(res => {
+                                                alert(res.data.message)
                                                 handleClose2()
                                                 props.reloadProject()
                                             }).catch()
@@ -319,7 +321,15 @@ const Task = (props) => {
                     {props.rootUser._id.toString() === props.project.manager._id.toString()
 
                         && <Box display={'flex'} flexDirection='row' textAlign={'center'} flex={2}>
-                            <IconButton><Trash/></IconButton>
+                            <IconButton onClick={()=>{
+                                api.post('/deletetask',{
+                                    task:props.task,
+                                    projectId: props.project._id,
+                                    groupId: props.group._id,
+                                }).then(res=>{
+                                    props.reloadProject()
+                                })
+                            }}><Trash/></IconButton>
                             <IconButton onClick={()=>setaddTaskBox(true)}><Edit /></IconButton>
                             </Box>}
                     <Box textAlign={'center'} alignSelf='center' flex={5}><Typography>{props.task.name}</Typography></Box>
@@ -378,7 +388,7 @@ const Task = (props) => {
                                     localStorage.setItem('viewedProfile', props.task.owner._id)
                                     window.open("/profileview", "_blank")
                                 } else {
-                                    localStorage.setItem('ViewedTeam', props.task.owner._id)
+                                    localStorage.setItem('viewedTeam', props.task.owner._id)
                                     window.open("/teamview", "_blank")
                                 }
                             }}

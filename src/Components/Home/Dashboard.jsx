@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material'
+import { Box, IconButton, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useCountdown } from '../countdown'
 import { buildStyles, CircularProgressbar } from 'react-circular-progressbar';
@@ -7,11 +7,13 @@ import Battery from './Battery';
 import { Barchart } from './Barchart';
 import { Piechart } from './Piechart';
 import { Linechart } from './Linechart';
+import { ArrowDown2 } from 'iconsax-react';
 
 const Dashboard = (props) => {
     const [percentage, setpercentage] = useState()
     const [tasks, settasks] = useState([])
     const [total, settotal] = useState(0)
+    const [showgroup, setshowgroup] = useState(true)
     const [completed, setcompleted] = useState(0)
     // console.log(days)
     useEffect(() => {
@@ -55,8 +57,8 @@ const Dashboard = (props) => {
     return (
         <Box flex={9} p={'1rem'} bgcolor={"#e3e3e3"}>
             <Box display={'flex'} flexDirection='column'>
-                <Box paddingX={'3rem'} paddingY='1rem' display={'flex'} justifyContent='space-between' flexDirection='row'>
-                    <Typography color={'primary.main'} fontSize={'60px'} sx={{ fontFamily: 'Alkatra' }}>{days} Days Left</Typography>
+                <Box sx={{ background: "linear-gradient(to right, #232526, #414345)" }} paddingX={'3rem'} paddingY='1rem' display={'flex'} justifyContent='space-between' flexDirection='row'>
+                    <Typography color={'#fff'} fontSize={'60px'} sx={{ fontFamily: 'Alkatra' }}>{days} Days Left</Typography>
 
                     <Box sx={{ width: 180, height: 180 }}>
                         <CircularProgressbar
@@ -77,42 +79,54 @@ const Dashboard = (props) => {
                                 // pathTransition: 'none',
 
                                 // Colors
-                                pathColor: `rgba(34, 53, 84)`,
-                                textColor: `rgba(34, 53, 84,1)`,
-                                trailColor: '#58739c',
-                                backgroundColor: '#3e98c7',
+                                pathColor: `#fff`,
+                                textColor: `#fff`,
+                                trailColor: '#939393',
+                                backgroundColor: '#fff',
                             })}
                             value={percentage} text={`${percentage}%`} />
                     </Box>
                 </Box>
-                <Box paddingY={'2rem'} display={'flex'} justifyContent='space-between' flexDirection='row'>
-                    <Box bgcolor={'#fff'} width='30rem' sx={{ boxShadow: " rgba(50, 50, 93, 0.25) 0px 6px 6px , rgba(0, 0, 0, 0.3) 0px 3px 3px" }} padding='3rem' display={'flex'} flexDirection='column'>
-                        {props.project.groups.map(group =>
-                            <Battery group={group} />
-                        )}
-                    </Box>
-                    <Box width='50%' alignItems={'center'} display='flex' flexDirection={'column'}>
+                <Box paddingY={'2rem'} display={'flex'} justifyContent='space-evenly' flexDirection='row'>
+                <Box width='50%' alignItems={'left'} display='flex' flexDirection={'column'}>
                         <Box>
-                            <Box m='1rem' p='1rem' color={'#fff'} width='20rem' height={'8rem'} sx={{ boxShadow: " rgba(50, 50, 93, 0.25) 0px 6px 12px , rgba(0, 0, 0, 0.3) 0px 3px 12px" ,background: "linear-gradient(to right, #283048, #859398)"}}>
+                            <Box m='1rem' p='1rem' color={'#fff'} width='20rem' height={'8rem'} sx={{ boxShadow: " rgba(50, 50, 93, 0.25) 0px 6px 12px , rgba(0, 0, 0, 0.3) 0px 3px 12px", background: "linear-gradient(to right, #283048, #859398)" }}>
                                 <Typography fontSize={'36px'}>Groups : {props.project.groups.length}</Typography>
                             </Box>
-                            <Box m='1rem' p='1rem' sx={{ boxShadow: " rgba(50, 50, 93, 0.25) 0px 6px 6px , rgba(0, 0, 0, 0.3) 0px 3px 3px" ,background:"linear-gradient(to right, #24c6dc, #514a9d)"}} color={'#fff'} width='20rem' height={'8rem'} >
+                            <Box m='1rem' p='1rem' sx={{ boxShadow: " rgba(50, 50, 93, 0.25) 0px 6px 6px , rgba(0, 0, 0, 0.3) 0px 3px 3px", background: "linear-gradient(to right, #4b6cb7, #182848)" }} color={'#fff'} width='20rem' height={'8rem'} >
                                 <Typography fontSize={'36px'}>Tasks : {total}</Typography>
                             </Box>
 
                         </Box>
-                        <Box p='1rem' bgcolor={'#fff'} marginRight={'2rem'} sx={{boxShadow:" rgba(50, 50, 93, 0.25) 0px 6px 6px , rgba(0, 0, 0, 0.3) 0px 3px 3px"}} marginTop={'2rem'} width={'100%'}>
+                        <Box p='1rem' bgcolor={'#fff'} marginRight={'2rem'} sx={{ boxShadow: " rgba(50, 50, 93, 0.25) 0px 6px 6px , rgba(0, 0, 0, 0.3) 0px 3px 3px" }} marginTop={'2rem'} width={'100%'}>
                             <Barchart />
                         </Box>
-                        <Box p='1rem' bgcolor={'#fff'} marginRight={'2rem'} sx={{boxShadow:" rgba(50, 50, 93, 0.25) 0px 6px 6px , rgba(0, 0, 0, 0.3) 0px 3px 3px"}} marginTop={'2rem'} width={'100%'}>
-                            <Linechart/>
+                        <Box p='1rem' bgcolor={'#fff'} marginRight={'2rem'} sx={{ boxShadow: " rgba(50, 50, 93, 0.25) 0px 6px 6px , rgba(0, 0, 0, 0.3) 0px 3px 3px" }} marginTop={'2rem'} width={'100%'}>
+                            <Linechart />
                         </Box>
                     </Box>
+                    <Box
+                        bgcolor={'#fff'} width='28rem'
+                        sx={{
+                            height: showgroup?"":'4rem',
+                            overflow: 'hidden',
+                            boxShadow: " rgba(50, 50, 93, 0.25) 0px 6px 6px , rgba(0, 0, 0, 0.3) 0px 3px 3px"
+                        }} padding='1rem' display={'flex'} flexDirection='column'>
+                        <Box display={'flex'} justifyContent='space-between' flexDirection='row'><Typography>Groups</Typography><IconButton onClick={()=>setshowgroup(!showgroup)}><ArrowDown2 /></IconButton></Box>
+                        <Box
+
+                            padding='3rem'>
+                            {props.project.groups.map(group =>
+                                <Battery group={group} />
+                            )}
+                        </Box>
+                    </Box>
+                    
                 </Box>
                 <Box m='auto' sx={{ boxShadow: " rgba(50, 50, 93, 0.25) 0px 6px 6px , rgba(0, 0, 0, 0.3) 0px 3px 3px" }}>
                     <Piechart project={props.project} />
                 </Box>
-                
+
             </Box>
         </Box>
     )

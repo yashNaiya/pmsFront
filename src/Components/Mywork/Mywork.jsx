@@ -97,7 +97,7 @@ const Mywork = () => {
     }
 
     if (rootUser) {
-
+        console.log(myContext.project)
         return (
             <Box>
                 <Stack direction={'row'} justifyContent='space-between'>
@@ -111,7 +111,7 @@ const Mywork = () => {
                                 </Box>
                                 <Box display='flex' flexDirection={'row'} width='100%' flexWrap={'wrap'}>
                                     {showPD && pastdue.map((task, index) => (
-                                        <Task Mywork={true} rootUser={rootUser} key={index} task={task} />
+                                        <Task project={myContext.project} Mywork={true} rootUser={rootUser} key={index} task={task} />
                                     ))}
                                 </Box>
                             </Box>
@@ -122,7 +122,7 @@ const Mywork = () => {
                                 </Box>
                                 <Box display='flex' flexDirection={'row'} width='100%' flexWrap={'wrap'}>
                                     {showToday && today.map((task, index) => (
-                                        <Task Mywork={true} rootUser={rootUser} key={index} task={task} />
+                                        <Task project={myContext.project} Mywork={true} rootUser={rootUser} key={index} task={task} />
                                     ))}
                                 </Box>
                             </Box>
@@ -133,7 +133,7 @@ const Mywork = () => {
                                 </Box>
                                 <Box display='flex' flexDirection={'row'} width='100%' flexWrap={'wrap'}>
                                     {showWeek && thisweek.map((task, index) => (
-                                        <Task Mywork={true} rootUser={rootUser} key={index} task={task} />
+                                        <Task project={myContext.project} Mywork={true} rootUser={rootUser} key={index} task={task} />
                                     ))}
                                 </Box>
                             </Box>
@@ -145,7 +145,7 @@ const Mywork = () => {
                                 </Box>
                                 <Box display='flex' flexDirection={'row'} width='100%' flexWrap={'wrap'}>
                                     {showlater && later.map((task, index) => (
-                                        <Task Mywork={true} rootUser={rootUser} key={index} task={task} />
+                                        <Task project={myContext.project} Mywork={true} rootUser={rootUser} key={index} task={task} />
                                     ))}
                                 </Box>
                             </Box>

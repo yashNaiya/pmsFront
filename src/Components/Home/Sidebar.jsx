@@ -106,7 +106,7 @@ const Sidebar = (props) => {
     
     if (wslist) {
         return (
-            <Box flex={1} minHeight={'100vh'} bgcolor={'grey.main'}>
+        <Box sx={{zIndex: '1000'}} flex={1} minHeight={'100vh'} bgcolor={'grey.main'}>
                 <Box borderBottom={'1px solid black'} justifyContent={'space-between'} display={'flex'} flexDirection={'column'} marginX={'1rem'} paddingBottom={'1rem'} paddingTop={'4rem'}>
                     <Box display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
                         {myContext.workspace && <Typography fontSize={'20px'} fontWeight={'bold'}>{myContext.workspace.name}</Typography>
@@ -213,6 +213,7 @@ const Sidebar = (props) => {
                                             onClick={() => {
                                                 props.setselectedproject(project)
                                                 myContext.sethomepage(5)
+                                                myContext.setProject(project)
                                                 props.setviewpage(0)
                                                 props.setinvitetoproject(false)
                                                 props.setmanageProject(false)

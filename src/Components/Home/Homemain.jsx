@@ -367,7 +367,7 @@ const Homemain = (props) => {
                                 <Box display={'flex'} justifyContent={'space-between'} flexDirection={'column'} flex={.5} paddingX={'1rem'} borderBottom={'1px solid black'}>
                                     <Box marginX={'1rem'} height='5rem' marginTop={'2rem'} display={'flex'} justifyContent={'space-between'} flexDirection={'row'}>
                                         <Box>
-                                            <Typography sx={{ marginBottom: '1rem' }} variant='h4'>{props.selectedproject.name}</Typography>
+                                            <Typography fontWeight={'bold'} sx={{ marginBottom: '1rem' }} variant='h4'>{props.selectedproject.name}</Typography>
                                         </Box>
                                         {(props.selectedproject.manager._id.toString() === props.rootUser._id.toString() || myContext.workspace.admin.toString() === props.rootUser._id.toString())
                                             &&
@@ -409,7 +409,7 @@ const Homemain = (props) => {
                                     </Box>
                                 </Box>}
                                 {props.viewpage===1 && <Timeline groups={props.selectedproject.groups}/>}
-                                {props.viewpage===2 && <Workload/>}
+                                {props.viewpage===2 && <Workload rootUser={props.rootUser}  project={props.selectedproject}/>}
                                 {props.viewpage===3 && <Dashboard project={props.selectedproject}/>}
     
     

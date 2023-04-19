@@ -36,6 +36,7 @@ const AddTeamBox = () => {
             api.post('/users',{_id:rootUser._id,wsId:wsId})
             .then(res=>{
               setusers(res.data)
+              console.log(res.data)
             })
             .catch(err=>{})
           }
