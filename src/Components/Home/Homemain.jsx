@@ -24,7 +24,7 @@ const Homemain = (props) => {
     const [index, setindex] = useState()
     const [index2, setindex2] = useState()
     const [anchorEl2, setAnchorEl2] = useState(null)
-   
+
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -79,8 +79,8 @@ const Homemain = (props) => {
         setsearch(e.target.value)
     }
 
- 
-    
+
+
 
     if (props.add && myContext.homepage === 2) {
 
@@ -198,7 +198,7 @@ const Homemain = (props) => {
                             {enterws === myContext.workspace.name && <Button color='red' variant='contained'
                                 onClick={() => {
                                     handleWorkspaceDelete()
-                                    window.location.reload(false) ;localStorage.clear()
+                                    window.location.reload(false); localStorage.clear()
                                 }}>Delete</Button>
                                 ||
                                 <Button disabled>
@@ -231,6 +231,9 @@ const Homemain = (props) => {
                         </IconButton>
                     </Box>
                     <Box display={'flex'} alignItems='left' marginLeft={'3rem'} flexDirection={'column'}>
+                        <Box display={'flex'} flexDirection='row' justifyContent='space-between'>
+                            <Typography fontWeight='bold' variant='h4' color={'primary.main'}>Invite To Project</Typography>
+                        </Box>
                         <Box margin={'5%'}>
                             <MUIDataTable
                                 title={'Users'}
@@ -246,7 +249,7 @@ const Homemain = (props) => {
                                 index.map(i => {
                                     selectedUsers.push(props.users[i.index])
                                 })
-                                api.post('/addtoproject', { users: selectedUsers, project:props.selectedproject, rootUser: props.rootUser, adminId: myContext.workspace.admin })
+                                api.post('/addtoproject', { users: selectedUsers, project: props.selectedproject, rootUser: props.rootUser, adminId: myContext.workspace.admin })
                                     .then(res => {
                                         alert(res.data.message)
                                         reloadProject()
@@ -286,25 +289,25 @@ const Homemain = (props) => {
         }
         else {
             if (myContext.homepage === 5 && props.selectedproject) {
-                if(props.manageProject){
-                    return(
-                        <ManageProject 
-                        project = {props.selectedproject}
-                        setselectedproject={props.setselectedproject}
-                        handleClose2={handleClose2}
-                        handleClose3={handleClose3}
-                        wsname={wsname}
-                        setwsname={setwsname}
-                        setmanageProject = {props.setmanageProject}
-                        handleWorkspaceRename={handleWorkspaceRename}
-                        handleWorkspaceDelete={handleWorkspaceDelete}
-                        enterws={enterws}
-                        setenterws={setenterws}
-                        deletews = {props.deletews}
-                        renamews = {props.renamews}
+                if (props.manageProject) {
+                    return (
+                        <ManageProject
+                            project={props.selectedproject}
+                            setselectedproject={props.setselectedproject}
+                            handleClose2={handleClose2}
+                            handleClose3={handleClose3}
+                            wsname={wsname}
+                            setwsname={setwsname}
+                            setmanageProject={props.setmanageProject}
+                            handleWorkspaceRename={handleWorkspaceRename}
+                            handleWorkspaceDelete={handleWorkspaceDelete}
+                            enterws={enterws}
+                            setenterws={setenterws}
+                            deletews={props.deletews}
+                            renamews={props.renamews}
                         />
                     )
-                }else{
+                } else {
                     return (
                         <Box flex={5}>
                             {myContext.workspace && <Dialog disableEscapeKeyDown open={props.deletews} onClose={handleClose3}>
@@ -320,8 +323,8 @@ const Homemain = (props) => {
                                     {enterws === myContext.workspace.name && <Button color='red' variant='contained'
                                         onClick={() => {
                                             handleWorkspaceDelete()
-                                            window.location.reload(false) ;localStorage.clear()
-                                            
+                                            window.location.reload(false); localStorage.clear()
+
                                         }}>Delete</Button>
                                         ||
                                         <Button disabled>
@@ -341,7 +344,7 @@ const Homemain = (props) => {
                                     <Button variant='contained'
                                         onClick={() => {
                                             handleWorkspaceRename()
-    
+
                                         }}>Rename</Button>
                                 </DialogActions>
                             </Dialog>
@@ -373,17 +376,17 @@ const Homemain = (props) => {
                                             &&
                                             <Box display='flex' flexDirection={'column'} justifyContent='space-between' >
                                                 <Button variant='outlined' onClick={() => props.setinvitetoproject(true)} sx={{ color: 'black' }}><ProfileAdd />invite</Button>
-                                                <Button variant='contained' onClick={()=>{props.setmanageProject(true)}}>Manage Project</Button>
+                                                <Button variant='contained' onClick={() => { props.setmanageProject(true) }}>Manage Project</Button>
                                             </Box>}
                                     </Box>
                                     <Box>
-                                        <Button onClick={()=>{props.setviewpage(0)}} sx={{ color: 'black' }}>Main Table</Button>
-                                        <Button onClick={()=>{props.setviewpage(1)}} sx={{ color: 'black' }}>Timeline</Button>
-                                        <Button onClick={()=>{props.setviewpage(2)}} sx={{ color: 'black' }}>Workload</Button>
-                                        <Button onClick={()=>{props.setviewpage(3)}} sx={{ color: 'black' }}>Dashboard</Button>
+                                        <Button onClick={() => { props.setviewpage(0) }} sx={{ color: 'black' }}>Main Table</Button>
+                                        <Button onClick={() => { props.setviewpage(1) }} sx={{ color: 'black' }}>Timeline</Button>
+                                        <Button onClick={() => { props.setviewpage(2) }} sx={{ color: 'black' }}>Workload</Button>
+                                        <Button onClick={() => { props.setviewpage(3) }} sx={{ color: 'black' }}>Dashboard</Button>
                                     </Box>
                                 </Box>
-                                {props.viewpage===0 && <Box flex={9} margin={'1rem'}>
+                                {props.viewpage === 0 && <Box flex={9} margin={'1rem'}>
                                     <Box display='flex' width='40%' justifyContent={'space-between'}>
                                         {props.selectedproject.manager._id.toString() === props.rootUser._id.toString() && <Button onClick={() => handleClickOpen()} variant='contained'>add group</Button>}
                                         <TextField
@@ -405,14 +408,14 @@ const Homemain = (props) => {
                                                 <Group reloadProject={reloadProject} rootUser={props.rootUser} wsId={myContext.workspace._id} project={props.selectedproject} key={index} group={group} />
                                             ))
                                         }
-    
+
                                     </Box>
                                 </Box>}
-                                {props.viewpage===1 && <Timeline groups={props.selectedproject.groups}/>}
-                                {props.viewpage===2 && <Workload rootUser={props.rootUser}  project={props.selectedproject}/>}
-                                {props.viewpage===3 && <Dashboard project={props.selectedproject}/>}
-    
-    
+                                {props.viewpage === 1 && <Timeline groups={props.selectedproject.groups} />}
+                                {props.viewpage === 2 && <Workload rootUser={props.rootUser} project={props.selectedproject} />}
+                                {props.viewpage === 3 && <Dashboard project={props.selectedproject} />}
+
+
                             </Box>
                         </Box>
                     )
@@ -434,7 +437,7 @@ const Homemain = (props) => {
                                 {enterws === myContext.workspace.name && <Button color='red' variant='contained'
                                     onClick={() => {
                                         handleWorkspaceDelete()
-                                        window.location.reload(false) ;localStorage.clear()
+                                        window.location.reload(false); localStorage.clear()
                                     }}>Delete</Button>
                                     ||
                                     <Button disabled>
@@ -495,7 +498,7 @@ const Homemain = (props) => {
                         {enterws === myContext.workspace.name && <Button color='red' variant='contained'
                             onClick={() => {
                                 handleWorkspaceDelete()
-                                window.location.reload(false) ;localStorage.clear()
+                                window.location.reload(false); localStorage.clear()
                             }}>Delete</Button>
                             ||
                             <Button disabled>

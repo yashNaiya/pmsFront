@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react'
 import api from '../../Api';
 import AppContext from '../AppContext'
 import { useContext } from 'react'
+import image from '../../Assets/project.png'
+import image2 from '../../Assets/customer.png'
 
 const SelectAdd = (props) => {
     const myContext = useContext(AppContext)
@@ -12,7 +14,9 @@ const SelectAdd = (props) => {
     const [contactList, setcontactList] = useState([])
     const [requirementList, setrequirementList] = useState([])
     const [users, setusers] = useState([])
-    
+    const [tempDoc, settempDoc] = useState()
+    const [doc, setdoc] = useState()
+
     const handleSearchChange = (e) => {
         setmanager(e.target.value)
 
@@ -98,7 +102,7 @@ const SelectAdd = (props) => {
             alert("Insufficient Information Provided")
             setadd(false)
         } else {
-            api.post('/addcustomer', { customerData: customerData, _id: props.selectedworkspacedata._id, contactList:contactList })
+            api.post('/addcustomer', { customerData: customerData, _id: props.selectedworkspacedata._id, contactList: contactList })
                 .then(res => {
                     alert(res.data.message)
                     setcustomerData({
@@ -109,7 +113,7 @@ const SelectAdd = (props) => {
                         website: ""
                     })
                 })
-                setadd(false)
+            setadd(false)
                 .catch(err => { console.log(err) })
         }
 
@@ -123,9 +127,9 @@ const SelectAdd = (props) => {
         }))
     };
     const handleProjectAdd = () => {
-        console.log(requirementList)
-        console.log(projectData)
-        console.log(manager)
+        // console.log(requirementList)
+        console.log(tempDoc)
+        console.log(doc)
         const data = {
             manager: manager,
             info: projectData,
@@ -139,8 +143,18 @@ const SelectAdd = (props) => {
                 setadd(false)
             } else {
                 api.post('/addproject', { projectData: data, _id: props.selectedworkspacedata._id })
-                    .then(res => { alert(res.data.message)
-                        setadd(false) })
+                    .then(res => {
+                        alert(res.data.message)
+                        if (doc !== null) {
+                            const formdata = new FormData()
+                            formdata.append('doc', doc)
+                            formdata.append('page', 'add')
+                            formdata.append('name', projectData.name)
+                            api.post('/adddoc', formdata)
+                                .then(res => { })
+                        }
+                        setadd(false)
+                    })
                     .catch(err => { console.log(err) })
             }
         }
@@ -278,7 +292,12 @@ const SelectAdd = (props) => {
                         <Button variant='contained' component="label" sx={{ justifyContent: 'left', marginBottom: '1rem' }}>
                             <Folder />
                             Additional Documnet
-                            <input hidden type='file' name='document' accept='.doc, .docx,.ppt, .pptx,.txt,.pdf' />
+                            <input
+                                onChange={(e) => {
+                                    settempDoc(URL.createObjectURL(e.target.files[0]))
+                                    setdoc(e.target.files[0])
+                                }}
+                                hidden type='file' name='document' accept='.pdf' />
                         </Button>
                     </Box>
                     <Box marginY={'3rem'} display='flex' flexDirection={'row'} width='30%' justifyContent={'space-between'}>
@@ -307,9 +326,9 @@ const SelectAdd = (props) => {
                         <CloseCircle />
                     </IconButton>
                 </Box>
-                <Box margin={'4rem'}>
-                    <Box display='flex' flexDirection={'column'} height='30vh' justifyContent={'space-between'}>
-                        <FormControl>
+                <Box marginX={'4rem'}>
+                    <Box display='flex' flexDirection={'column'} height='50vh' justifyContent={'space-between'}>
+                        {/* <FormControl>
                             <RadioGroup
                                 aria-labelledby="demo-radio-buttons-group-label"
                                 value={value}
@@ -319,8 +338,30 @@ const SelectAdd = (props) => {
                                 <FormControlLabel value="customer" control={<Radio />} label="client" />
                                 <FormControlLabel value="project" control={<Radio />} label="Project" />
                             </RadioGroup>
-                        </FormControl>
-                        <Box display='flex' flexDirection={'row'} width='20%' justifyContent={'space-between'}>
+                        </FormControl> */}
+                        <Box display={'flex'} flexDirection={'row'}>
+                            <Box width={'17rem'} boxShadow={value === 'project' ? 'rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px' : " rgba(50, 50, 93, 0.25) 0px 6px 6px , rgba(0, 0, 0, 0.3) 0px 3px 3px"}
+                                height={'20rem'} sx={{ ":hover": { cursor: 'pointer', boxShadow: "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px" } }}
+                                onClick={() => { setValue('project') }} borderRadius='.5rem' marginRight={'3rem'} display='flex' marginTop={'1rem'} padding='1rem' flexDirection='column'>
+                                <Box m='auto' >
+                                    <img src={image} width='150px'></img>
+                                </Box>
+                                <Box borderTop={'1px solid black'}>
+                                    <Typography textAlign={'center'} sx={{ marginY: '1rem' }} label='name' name='name'><b>Add New Project</b></Typography>
+                                </Box>
+                            </Box>
+                            <Box width={'17rem'} boxShadow={value === 'customer' ? 'rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px' : " rgba(50, 50, 93, 0.25) 0px 6px 6px , rgba(0, 0, 0, 0.3) 0px 3px 3px"}
+                                height={'20rem'} sx={{ ":hover": { cursor: 'pointer', boxShadow: "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px" } }}
+                                onClick={() => { setValue('customer') }} borderRadius='.5rem' marginRight={'3rem'} display='flex' marginTop={'1rem'} padding='1rem' flexDirection='column'>
+                                <Box m='auto' >
+                                    <img src={image2} width='150px'></img>
+                                </Box>
+                                <Box borderTop={'1px solid black'}>
+                                    <Typography textAlign={'center'} sx={{ marginY: '1rem' }} label='name' name='name'><b>Add New Client</b></Typography>
+                                </Box>
+                            </Box>
+                        </Box>
+                        <Box marginTop={'3rem'} display='flex' flexDirection={'row'} width='20%' justifyContent={'space-between'}>
                             <Button sx={{ textTransform: 'none' }} onClick={() => { console.log(value); setadd(true) }} variant='contained'>Add</Button>
                             <Button sx={{ textTransform: 'none' }} variant='outlined'
                                 onClick={() => {
@@ -328,6 +369,7 @@ const SelectAdd = (props) => {
                                 }}>Cancel</Button>
                         </Box>
                     </Box>
+
                 </Box>
             </Box>
         )

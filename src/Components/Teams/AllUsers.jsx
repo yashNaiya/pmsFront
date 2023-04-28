@@ -23,6 +23,7 @@ const AllUsers = (props) => {
             )
         }
     }}];
+    const columns2 = ["name", "email", "number", "role"]
     const options = {
         filter: true,
         selectableRows: 'none',
@@ -43,7 +44,7 @@ const AllUsers = (props) => {
                     <MUIDataTable
                         title={'Users'}
                         data={data}
-                        columns={columns}
+                        columns={props.isAdmin?columns:columns2}
                         options={options} />
                 </Box>
     

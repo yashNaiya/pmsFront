@@ -1,6 +1,7 @@
 import { Box } from '@mui/material'
 import { styled, Typography } from '@mui/material'
 import React from 'react'
+import image from '../../Assets/man.png'
 
 const MessageBox = (props) => {
     const SERVER_HOST = process.env.REACT_APP_API_ENDPOINT + '/images/'
@@ -30,7 +31,10 @@ const MessageBox = (props) => {
             <Box marginTop={"20px"} width={"100%"} display={"flex"} flexDirection={"column"} alignItems={"flex-end"}>
                 <MessageTop>
                     <Typography maxWidth={"300px"} display={"flex"} flexWrap={"wrap"} p={"10px"} borderRadius={"20px"} sx={{marginX:"10px", backgroundColor:"#D3D3D3"}}>{props.text}</Typography>
+                    {props.sender.image!=='' && 
                     <img src={SERVER_HOST + props.sender.image} width={"32px"} height={"32px"} borderRadius={"50%"} objectFit={"cover"} alt=''/>
+                    ||<img src={image} width={"32px"} height={"32px"} borderRadius={"50%"} objectFit={"cover"} alt=''/>
+                    }
                 </MessageTop>
                 
             </Box>

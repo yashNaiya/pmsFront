@@ -83,7 +83,7 @@ const Sidebarteams = (props) => {
                     </Box>}
                 </Box>
                 <Box justifyContent={'space-between'} display={'flex'} flexDirection={'column'} marginX={'1rem'}>
-                    <Box borderBottom={'1px solid black'} paddingY="1rem" display={'flex'} flexDirection={'column'} justifyContent={'space-between'}>
+                    {props.isAdmin && <Box borderBottom={'1px solid black'} paddingY="1rem" display={'flex'} flexDirection={'column'} justifyContent={'space-between'}>
                         <Box display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
                             <Typography>All Teams</Typography>
 
@@ -91,7 +91,7 @@ const Sidebarteams = (props) => {
                                 <ArrowDown2 />
                             </IconButton>
                         </Box>
-                        {showallteams &&
+                        {showallteams && 
                             props.allTeams.map(team => {
                                 return (
                                     <Box >
@@ -105,7 +105,7 @@ const Sidebarteams = (props) => {
                                 )
                             })
                         }
-                    </Box>
+                    </Box>}
                     <Box borderBottom={'1px solid black'} paddingY="1rem" display={'flex'} flexDirection={'column'} justifyContent={'space-between'}>
                         <Box display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
                             <Typography>My Teams</Typography>

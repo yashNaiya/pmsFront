@@ -3,10 +3,12 @@ import React, { useEffect, useState } from 'react'
 import AppContext from './../AppContext'
 import { useContext } from 'react'
 import api from '../../Api'
-import { Add, CloseCircle, Edit, Edit2, Profile } from 'iconsax-react'
+import { Add, CloseCircle, Edit, Edit2, Folder, Profile } from 'iconsax-react'
 import MUIDataTable from 'mui-datatables'
+import { Document, Page } from 'react-pdf';
 
 const ManageProject = (props) => {
+    const SERVER_HOST = process.env.REACT_APP_API_ENDPOINT + '/docs/'
     const [users, setusers] = useState([])
     const [usersTemp, setusersTemp] = useState([])
     const [teams, setteams] = useState([])
@@ -37,6 +39,12 @@ const ManageProject = (props) => {
             name: '',
             desc: '',
         }])
+    }
+    const [numPages, setNumPages] = useState(null);
+    const [pageNumber, setPageNumber] = useState(1);
+
+    function onDocumentLoadSuccess({ numPages }) {
+        setNumPages(numPages);
     }
     const handleRequiremetChange = (e, index) => {
         const { name, value } = e.target
@@ -77,7 +85,7 @@ const ManageProject = (props) => {
                             onClick={() => {
                                 api.post('/removefromproject', { team: false, name: tableMeta.rowData[0], projectId: props.project._id })
                                     .then(res => {
-                                        seteditmembers(false); 
+                                        seteditmembers(false);
                                         alert(res.data.message)
                                         api.post('/readproject', { _id: props.project._id })
                                             .then(res => props.setselectedproject(res.data))
@@ -102,7 +110,7 @@ const ManageProject = (props) => {
                                 console.log(tableMeta.rowData)
                                 api.post('/removefromproject', { team: true, name: tableMeta.rowData[0], projectId: props.project._id })
                                     .then(res => {
-                                        seteditmembers(false); 
+                                        seteditmembers(false);
                                         alert(res.data.message)
                                         api.post('/readproject', { _id: props.project._id })
                                             .then(res => props.setselectedproject(res.data))
@@ -192,7 +200,7 @@ const ManageProject = (props) => {
     const users1 = usersTemp.filter(user => {
         return user.name.includes(manager) || user.email.includes(manager)
     })
-
+    console.log(SERVER_HOST + props.project.doc)
     const myContext = useContext(AppContext)
     return (
         <Box flex={5}>
@@ -362,6 +370,39 @@ const ManageProject = (props) => {
                         <Button onClick={() => { seteditmembers(false); }} variant='outlined'>cancel</Button>
                     </Box>}
                 </Box>}
+                {props.project.doc && <Box>
+                    <a href={SERVER_HOST + props.project.doc} target='_blank'>project Document</a>
+                    <Button sx={{marginLeft:'1rem'}} variant='outlined' onClick={()=>{
+                        api.post('/removedoc', { _id: props.project._id })
+                        .then(res=>{
+                            api.post('/readproject', { _id: props.project._id })
+                            .then(res => props.setselectedproject(res.data))
+                        })
+                    }}>Remove</Button>
+                    {/* <embed src={SERVER_HOST + props.project.doc} type='application/pdf'/> */}
+                </Box> ||
+                    <Box>
+                        <Button component="label" variant='contained'>
+                            <Folder />
+                            Add Document
+                            <input
+                                onChange={(e) => {
+
+                                    const formdata = new FormData()
+                                    formdata.append('doc', e.target.files[0])
+                                    formdata.append('name', props.project.name)
+                                    formdata.append('page', 'manage')
+
+                                    api.post('/adddoc', formdata)
+                                        .then(res => {
+                                            alert(res.data.message)
+                                            api.post('/readproject', { _id: props.project._id })
+                                                .then(res => props.setselectedproject(res.data))
+                                        })
+                                }}
+                                hidden type='file' name='document' accept='.pdf' />
+                        </Button>
+                    </Box>}
             </Box>
         </Box >
     )

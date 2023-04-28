@@ -332,7 +332,7 @@ const ClientPage = (props) => {
                             </Box>
                             || <Box display='flex' flexDirection={'row'} flexWrap='wrap'>
                                 {contacts.map((contact, index) => (
-                                    <Box key={index} bgcolor={'primary.shadow'} borderRadius='.5rem' marginRight={'3rem'} paddingBottom={'1rem'} display='flex' marginTop={'1rem'} padding='1rem' flexDirection='column'>
+                                    <Box key={index}  boxShadow= " rgba(50, 50, 93, 0.25) 0px 6px 6px , rgba(0, 0, 0, 0.3) 0px 3px 3px" borderRadius='.5rem' marginRight={'3rem'} paddingBottom={'1rem'} display='flex' marginTop={'1rem'} padding='1rem' flexDirection='column'>
                                         <Typography sx={{ marginY: '1rem' }} label='name' name='name'>Name : {contact.name}</Typography>
                                         <Typography sx={{ marginBottom: '1rem' }} label='email' name='email'>Email : {contact.email}</Typography>
                                         <Typography sx={{ marginBottom: '1rem' }} label='number' name='number'>Number : {contact.number}</Typography>
@@ -355,7 +355,7 @@ const ClientPage = (props) => {
                                 {projects.map((project, index) => (
 
                                     <Box key={index} width={'17rem'} sx={{ ":hover": { cursor: 'pointer', boxShadow: "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px" } }}
-                                        onClick={() => { props.setselectedproject(project); myContext.sethomepage(5)}} bgcolor={'primary.shadow'} borderRadius='.5rem' marginRight={'3rem'} display='flex' marginTop={'1rem'} padding='1rem' flexDirection='column'>
+                                        onClick={() => { props.setselectedproject(project); myContext.sethomepage(5)}}  boxShadow=" rgba(50, 50, 93, 0.25) 0px 6px 6px , rgba(0, 0, 0, 0.3) 0px 3px 3px" borderRadius='.5rem' marginRight={'3rem'} display='flex' marginTop={'1rem'} padding='1rem' flexDirection='column'>
                                         <Box m='auto' >
                                             <img src={image} width='150px'></img>
                                         </Box>

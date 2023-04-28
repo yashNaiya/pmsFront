@@ -85,7 +85,7 @@ const Teams = () => {
                 ||
                 page === 0 && <Teamsmain isAdmin={isAdmin} users={users} rootUser={rootUser} tempteam={tempteam} />
                 ||
-                page === 2 && <AllUsers users={users} />
+                page === 2 && <AllUsers isAdmin={isAdmin} users={users} />
               }
             </Stack>
           </Box>

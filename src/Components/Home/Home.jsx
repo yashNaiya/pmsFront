@@ -29,6 +29,7 @@ const Home = () => {
   const [renamews, setrenamews] = useState(false)
   const [deletews, setdeletews] = useState(false)
   const [viewpage, setviewpage] = useState(0)
+ 
 
 
   const navigate = useNavigate()
@@ -114,6 +115,7 @@ const Home = () => {
               <Homemain
                 users={users}
                 teams={teams}
+                isAdmin={isAdmin}
                 setdeletews={setdeletews}
                 setrenamews={setrenamews}
                 renamews={renamews}

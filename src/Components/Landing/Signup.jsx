@@ -52,7 +52,7 @@ const Signup = () => {
     const handleSendOtp = () => {
         if (inputs.email) {
             let otp = Math.floor(1000 + Math.random() * 9000);
-            // console.log(otp)
+            console.log(otp)
             setotp(otp)
             setotpClick(true)
             api.post('/sendotp', { otp: otp, to: inputs.email })

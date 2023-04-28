@@ -42,8 +42,8 @@ const ChatBox = (props) => {
                         setconversations(res.data.conversations)
                         console.log(res.data)
                     })
-                socket.emit('new message', res.data, chat.members,props.taskId)
-                
+                socket.emit('new message', res.data, chat.members, props.taskId)
+
             })
             .catch()
         setNewMessage('')
@@ -129,12 +129,12 @@ const ChatBox = (props) => {
 
                     </Box>
                     <ChatboxBottom>
-                        <TextField autoFocus='autoFocus' key='message' sx={{ width: '80%' }} size='small' value={newMessage} onChange={(e) => setNewMessage(e.target.value)} label='write something'></TextField>
+                        <TextField key='message' sx={{ width: '80%' }} size='small' value={newMessage} onChange={(e) => setNewMessage(e.target.value)} label='write something'></TextField>
                         <Button onClick={handleMessageSend}><Send /></Button>
                         {!showadd && <Button onClick={() => { setshowadd(true) }}><AddSquare /></Button>}
                     </ChatboxBottom>
                 </Box>
-                {showadd && <Box display='flex' flexDirection={'column'} justifyContent='space-between' height={'75vh'} p='.5rem' width='35%'>
+                {showadd && <Box  display='flex' flexDirection={'column'} height={'75vh'} p='.5rem' width='35%'>
                     <Box>
                         <Box display='flex' justifyContent={'right'} width='100%'>
                             <Button onClick={() => { setshowadd(false) }}><CloseSquare /></Button>
@@ -144,7 +144,7 @@ const ChatBox = (props) => {
                             onChange={handleChange}
                             variant='standard'
                             size='small'
-                            placeholder='search'
+                            placeholder='add'
 
                             sx={{ marginBottom: '5px', backgroundColor: '#fff', paddingX: '.5rem', paddingY: '.2rem', borderRadius: '.5rem' }}
                             InputProps={{
@@ -152,6 +152,7 @@ const ChatBox = (props) => {
                                 startAdornment: <InputAdornment position="start"><SearchNormal /></InputAdornment>,
                             }}
                         />
+                        <Box  sx={{zIndex:'1000'}} position={'absolute'}>
                         {users1.map(user => <div key={user._id}><Box display='flex' flexDirection={'row'} paddingX='.5rem' marginY='.1rem' sx={{ backgroundColor: '#fff', cursor: "pointer", borderRadius: '0.5rem' }}>
                             <Button fullWidth
                                 onClick={() => {
@@ -161,32 +162,66 @@ const ChatBox = (props) => {
                                 sx={{ color: "black", textTransform: 'none', justifyContent: 'left' }}>
                                 {user.name}
                             </Button>
-                            <IconButton sx={{ color: 'primary.main' }}>
+                            <IconButton
+                                onClick={() => {
+                                    api.post('/addtochat', { _id: props.chatId, memberId: user._id })
+                                        .then(res => {
+                                            alert("Member Added To The Chat")
+                                            setshowadd(false)
+                                            api.post('/readchat', { _id: props.chatId })
+                                                .then(res => {
+                                                    setchat(res.data);
+
+                                                    setconversations(res.data.conversations)
+                                                    res.data.members.forEach(member => {
+                                                        // console.log(member._id)
+                                                        api.post('/readuser', { _id: member._id })
+                                                            .then(res => {
+                                                                members.push(res.data)
+                                                            })
+                                                    });
+                                                    console.log(members)
+                                                    setchatmembers(members)
+                                                })
+                                        })
+                                }}
+                                sx={{ color: 'primary.main' }}>
                                 <AddCircle />
                             </IconButton>
                         </Box></div>)}
+                        </Box>
                     </Box>
-                    <Box marginBottom={'2rem'}>
+                    <Box>
                         <Box>
                             <Typography marginY={'1rem'} fontWeight={'bold'}>Members</Typography>
                         </Box>
-                        <Box display='flex' flexDirection={'row'} flexWrap='wrap'>
+                        <Box display='flex' flexDirection={'column'} overflow={'scroll'}>
                             {
                                 chatmembers.map(member => (
                                     // <Typography>23</Typography>
-                                    <Box key={member._id}>
+                                    <Box marginBottom={'1rem'} key={member._id}>
                                         {member.image && <Box marginRight={'.3rem'} overflow={'hidden'} borderRadius={'50%'} width={'50px'} height={'45px'} border={'2px solid #223554'}>
                                             <IconButton sx={{ minHeight: 0, minWidth: 0, padding: 0 }}><img src={SERVER_HOST + member.image} position='center' alt='profile1' width={'45px'} height={'45px'} /></IconButton>
                                         </Box>
                                             ||
-                                            <Box overflow={'hidden'} borderRadius={'50%'} width={'50px'} height={'45px'} border={'2px solid #223554'}>
-                                                <img src={Localimage} position='center' alt='profile1' width={'45px'} height={'45px'} />
+                                            <Box display={'flex'} flexDirection={'row'} alignItems={'center'}> 
+                                                <Box sx={{ ":hover": { cursor: 'pointer' } }}
+                                                    onClick={() => {
+                                                        localStorage.setItem("viewedProfile", member._id)
+                                                        window.open("/profileview", "_blank")
+                                                    }}
+                                                    overflow={'hidden'} borderRadius={'50%'} width={'50px'} height={'45px'} border={'2px solid #223554'}>
+                                                    <img src={Localimage} position='center' alt='profile1' width={'45px'} height={'45px'} />
+                                                </Box>
+                                                <Typography>{member.name}</Typography>
                                             </Box>
+
                                         }
                                     </Box>
                                 )
                                 )
                             }
+                            
                         </Box>
                     </Box>
 
