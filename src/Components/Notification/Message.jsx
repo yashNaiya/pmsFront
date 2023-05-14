@@ -1,12 +1,18 @@
 import { Box, Button, IconButton, Typography } from '@mui/material'
 import { CloseCircle } from 'iconsax-react'
 import React from 'react'
+import api from '../../Api'
 
 const Message = (props) => {
     return (
         <Box width='25rem' paddingY='1rem'>
             <Box display={'flex'} flexDirection='row' justifyContent={'flex-end'}>
-                <IconButton sx={{color:'black', justifyContent:'right'}}>
+                <IconButton onClick={()=>{
+                    api.post('/removenotification', {message:props.message, userId: props.rootUser._id })
+                    .then(res => {
+                        window.location.reload();
+                    })
+                }} sx={{color:'black', justifyContent:'right'}}>
                     <CloseCircle />
                 </IconButton>
             </Box>

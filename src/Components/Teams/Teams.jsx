@@ -85,7 +85,7 @@ const Teams = () => {
                 ||
                 page === 0 && <Teamsmain isAdmin={isAdmin} users={users} rootUser={rootUser} tempteam={tempteam} />
                 ||
-                page === 2 && <AllUsers isAdmin={isAdmin} users={users} />
+                page === 2 && <AllUsers workspace={myContext.workspace} isAdmin={isAdmin} users={users} rootUser={rootUser}/>
               }
             </Stack>
           </Box>
@@ -99,8 +99,7 @@ const Teams = () => {
         <Stack direction={'row'} justifyContent='space-between'>
           <Navigate />
           <Box flex={16} alignItems='center' height='100vh' display='flex' justifyContent={'center'} flexDirection='column'>
-            <Typography sx={{ fontFamily: 'Alkatra', opacity: '.4' }} fontSize={'45px'} >Error!!!</Typography>
-            <Typography sx={{ fontFamily: 'Alkatra', opacity: '.4' }} fontSize={'45px'}>No workspace selected</Typography>
+            <Typography sx={{ fontFamily: 'Alkatra', opacity: '.4' }} fontSize={'45px'} >Loading...</Typography>
           </Box>
         </Stack>
       </Box>

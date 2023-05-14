@@ -17,18 +17,22 @@ const Sidebarteams = (props) => {
     const [showmyteams, setshowmyteams] = useState(false)
     const myContext = useContext(AppContext)
     const [users, setusers] = useState([])
-     
+    
     const handleChange = (e) => {
         setsearch(e.target.value)
         if (wsId) {
             if (e.target.value === '') {
-                setusers([])
+                // tempTeams = []
+                
             } else {
-                api.post('/users', { _id: props.rootUser._id, wsId: wsId })
-                    .then(res => {
-                        setusers(res.data)
-                    })
-                    .catch(err => { })
+             
+                // console.log(tempTeams)
+                // tempTeams = props.myTeams.name.includes(e.target.value)
+                // api.post('/users', { _id: props.rootUser._id, wsId: wsId })
+                //     .then(res => {
+                //         setusers(res.data)
+                //     })
+                //     .catch(err => { })
             }
         } else {
             alert('select workspace')
@@ -36,8 +40,11 @@ const Sidebarteams = (props) => {
 
     }
 
-    const users1 = users.filter(user => {
-        return user.name.includes(search) || user.email.includes(search)
+    // const users1 = users.filter(user => {
+    //     return user.name.includes(search) || user.email.includes(search)
+    // })
+    const tempTeams = props.myTeams.filter(team => {
+        return team.name.includes(search)
     })
 
     if (props.allTeams && props.myTeams) {
@@ -57,26 +64,25 @@ const Sidebarteams = (props) => {
                             startAdornment: <InputAdornment position="start"><SearchNormal /></InputAdornment>,
                         }}
                     />
-
-                    {users1.map(user => <div key={user._id}><Box paddingX='.5rem' marginY='.1rem' sx={{ backgroundColor: '#fff', cursor: "pointer", borderRadius: '0.5rem' }}>
+                    {search && tempTeams.map(team => <div key={team._id}><Box paddingX='.5rem' marginY='.1rem' sx={{ backgroundColor: '#fff', cursor: "pointer", borderRadius: '0.5rem' }}>
                         <Button fullWidth
                             onClick={() => {
-                                localStorage.setItem("viewedProfile", user._id)
-                                window.open("/profileview", "_blank")
+                                props.setpage(0)
+                                props.settempteam(team)
                             }}
                             sx={{ color: "black", textTransform: 'none', justifyContent: 'left' }}>
-                            {user.name}
+                            {team.name}
                         </Button>
                     </Box></div>)}
 
                     <Box marginTop={'1rem'}>
-                        <Button variant='contained' onClick={myContext.toggleTeam} fullWidth sx={{ color: 'black', margin: 0, paddingX: 0, justifyContent: 'left',backgroundColor:'primary.shadow'  }}>
+                        <Button variant='contained' onClick={myContext.toggleTeam} fullWidth sx={{ color: 'black', margin: 0, paddingX: 0, justifyContent: 'left', backgroundColor: 'primary.shadow' }}>
                             <Add />
                             <Typography marginLeft={'1rem'}>Add</Typography>
                         </Button>
                     </Box>
                     {props.isAdmin && <Box marginTop={'1rem'}>
-                        <Button variant='contained' onClick={() => { props.setpage(1) }} fullWidth sx={{ color: 'black', margin: 0, paddingX: 0, justifyContent: 'left',backgroundColor:'primary.shadow'  }}>
+                        <Button variant='contained' onClick={() => { props.setpage(1) }} fullWidth sx={{ color: 'black', margin: 0, paddingX: 0, justifyContent: 'left', backgroundColor: 'primary.shadow' }}>
                             <TickCircle />
                             <Typography marginLeft={'1rem'}>Approve</Typography>
                         </Button>
@@ -91,7 +97,7 @@ const Sidebarteams = (props) => {
                                 <ArrowDown2 />
                             </IconButton>
                         </Box>
-                        {showallteams && 
+                        {showallteams &&
                             props.allTeams.map(team => {
                                 return (
                                     <Box >

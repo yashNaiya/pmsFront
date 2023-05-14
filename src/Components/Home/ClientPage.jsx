@@ -379,9 +379,7 @@ const ClientPage = (props) => {
                                 <Button
                                     onClick={() => { }}
                                     variant='contained'
-                                    
-                                    color='red'
-                                    sx={{ textTransform: 'none',width:'12rem'}}>Delete Client</Button>
+                                    sx={{backgroundColor:'#ff0000', textTransform: 'none',width:'12rem'}}>Delete Client</Button>
                             </Box>
                         </Box>
                     </Box>

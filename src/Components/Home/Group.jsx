@@ -1,6 +1,6 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, IconButton, InputLabel, Menu, MenuItem, Radio, RadioGroup, Select, TextField, Typography } from '@mui/material'
 import { height, Stack } from '@mui/system'
-import { AddCircle, ArrowDown2, ArrowRight2, Edit, Message, People, Profile } from 'iconsax-react'
+import { AddCircle, ArrowDown2, ArrowRight2, Edit, Message, More, More2, People, Profile } from 'iconsax-react'
 import React, { useEffect, useState } from 'react'
 import api from '../../Api'
 import Task from './Task'
@@ -27,6 +27,18 @@ const Group = (props) => {
     const [ownerType, setownerType] = useState("")
     const [users, setusers] = useState([])
     const [teams, setteams] = useState([])
+    const [anchorEl, setAnchorEl] = useState(null)
+    const handleClose1 = () => {
+        setAnchorEl(null);
+    };
+    // const handleClose2 = () => {
+    //     setAnchorEl2(null);
+    // };
+    const handleClick1 = (event) => {
+        console.log(event.currentTarget)
+        setAnchorEl(event.currentTarget);
+
+    };
     // console.log()
     const handleSearchChange = (e) => {
         setowner(e.target.value)
@@ -34,7 +46,7 @@ const Group = (props) => {
         if (e.target.value === '') {
             setusers([])
         } else {
-            api.post('/projectmembers', { _id:props.project._id})
+            api.post('/projectmembers', { _id: props.project._id })
                 .then(res => {
                     setusers(res.data.users)
                 })
@@ -48,7 +60,7 @@ const Group = (props) => {
         if (e.target.value === '') {
             setteams([])
         } else {
-            api.post('/projectmembers', {_id:props.project._id})
+            api.post('/projectmembers', { _id: props.project._id })
                 .then(res => {
                     setteams(res.data.teams)
                 })
@@ -79,12 +91,48 @@ const Group = (props) => {
             due: ''
         })
     };
+    const Open = Boolean(anchorEl);
+
 
     if (props.group && props.project) {
         console.log(props.group.tasks)
         return (
             <Box marginY='1.5rem'>
                 <Button onClick={() => setopen(!open)} sx={{ textTransform: 'none', fontSize: '20px', fontWeight: 'bold', textAlign: 'center' }}>{open ? <ArrowDown2 /> : <ArrowRight2 />}{props.group.name}</Button>
+                {props.rootUser._id.toString() === props.project.manager._id.toString() &&
+                    <IconButton
+                        sx={{ color: 'black' }}
+                        onClick={handleClick1}
+                        bgcolor='green.main' flex={4}
+                        aria-controls={Open ? 'basic-menu' : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={Open ? 'true' : undefined}
+                    ><More /></IconButton>
+                }
+                {props.group.tasks.length === 0 && <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={Open}
+                    onClose={handleClose1}
+                    MenuListProps={{
+                        'aria-labelledby': 'basic-button',
+                    }}
+                >
+                    <MenuItem onClick={() => { setAnchorEl(null); props.setchangeGroupname(true) }}>Rename</MenuItem>
+                    <MenuItem sx={{ color: '#ff0000' }} onClick={() => { setAnchorEl(null); props.setdeletegroup(true) }}>Delete</MenuItem>
+                </Menu> || <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={Open}
+                    onClose={handleClose1}
+                    MenuListProps={{
+                        'aria-labelledby': 'basic-button',
+                    }}
+                >
+                        <MenuItem onClick={() => { setAnchorEl(null); props.setoldgroupname(props.group.name); props.setchangeGroupname(true) }}>Rename</MenuItem>
+                        <MenuItem disabled sx={{ color: '#ff0000' }} onClick={() => { setAnchorEl(null); }}>Delete</MenuItem>
+                    </Menu>
+                }
                 <Dialog fullWidth disableEscapeKeyDown open={addTaskBox} onClose={handleClose2}>
                     <DialogTitle>Add Task</DialogTitle>
                     <DialogContent>
@@ -193,9 +241,9 @@ const Group = (props) => {
 
                                     api.post('/addtask',
                                         {
-                                            manager:props.project.manager,
+                                            manager: props.project.manager,
                                             projectId: props.project._id,
-                                            projectName:props.project.name,
+                                            projectName: props.project.name,
                                             groupId: props.group._id,
                                             requirement: requirement,
                                             status: status,
@@ -214,12 +262,12 @@ const Group = (props) => {
                             }}>Add</Button>
                     </DialogActions>
                 </Dialog>
-                
+
                 {open && <Box paddingBottom={'.6rem'} border={'2px solid #223554'} borderRadius='1rem' margin='auto' width='80%'  >
                     <Stack sx={{ borderTopLeftRadius: '1rem', borderTopRightRadius: '1rem' }} bgcolor={'grey.main'} p='.2rem' margin={'auto'} width={'100%'} direction={'row'} justifyContent='space-between'>
-                        {props.rootUser._id.toString()===props.project.manager._id.toString()
-                        
-                        && <Box textAlign={'center'} flex={2}></Box>}
+                        {props.rootUser._id.toString() === props.project.manager._id.toString()
+
+                            && <Box textAlign={'center'} flex={2}></Box>}
                         <Box textAlign={'center'} flex={5}><Typography>Item</Typography></Box>
                         <Box textAlign={'center'} flex={2}></Box>
                         <Box textAlign={'center'} flex={2}><Typography>Owner</Typography></Box>
@@ -227,10 +275,18 @@ const Group = (props) => {
                         <Box textAlign={'center'} flex={3}><Typography>Due</Typography></Box>
                         <Box textAlign={'center'} flex={3}><Typography>Linked To</Typography></Box>
                     </Stack>
-                    {props.group.tasks.map((task, index) => (
-                        <Task reloadProject={props.reloadProject} group={props.group} project={props.project} rootUser={props.rootUser} key={index} task={task} />
-                    ))}
-                    {props.project.manager._id.toString() === props.rootUser._id.toString() && <IconButton onClick={() => { handleClickOpen2() }} sx={{ marginLeft: '1.2%',color:'primary.main' }}><AddCircle /></IconButton>}
+                    {props.search === '' ?
+                        props.group.tasks.map((task, index) => (
+                                <Task reloadProject={props.reloadProject} group={props.group} project={props.project} rootUser={props.rootUser} key={index} task={task} />
+                        ))
+                        : 
+                        props.group.tasks.map((task, index) => (
+                            task.name.includes(props.search) ?
+                                <Task reloadProject={props.reloadProject} group={props.group} project={props.project} rootUser={props.rootUser} key={index} task={task} />
+                                : <></>
+                        ))
+                        }
+                    {props.project.manager._id.toString() === props.rootUser._id.toString() && <IconButton onClick={() => { handleClickOpen2() }} sx={{ marginLeft: '1.2%', color: 'primary.main' }}><AddCircle /></IconButton>}
                 </Box>
                     ||
                     <Box>

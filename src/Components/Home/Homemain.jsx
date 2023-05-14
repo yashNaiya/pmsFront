@@ -13,18 +13,30 @@ import Timeline from './Timeline'
 import Workload from './Workload'
 import Dashboard from './Dashboard'
 import ManageProject from './ManageProject'
+import { useNavigate } from 'react-router-dom'
 
 const Homemain = (props) => {
     const myContext = useContext(AppContext)
     const [wsname, setwsname] = useState()
+    const [changeGroupname, setchangeGroupname] = useState(false)
+    const [deletegroup, setdeletegroup] = useState(false)
     const [enterws, setenterws] = useState()
     const [groupName, setgroupName] = useState()
     const [open, setOpen] = useState(false);
-    const [search, setsearch] = useState()
+    const [search, setsearch] = useState('')
     const [index, setindex] = useState()
     const [index2, setindex2] = useState()
     const [anchorEl2, setAnchorEl2] = useState(null)
-
+    const [newadmin, setnewadmin] = useState({ name: '' })
+    const [newgroupName, setnewgroupName] = useState()
+    const [oldgroupname, setoldgroupname] = useState()
+    const navigate = useNavigate()
+    let tempadmin = []
+    if(props.users){
+        tempadmin = props.users.filter(user => {
+            return user.name === newadmin.name
+        })
+    }
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -77,13 +89,24 @@ const Homemain = (props) => {
     let selectedTeams = []
     const handleChange = (e) => {
         setsearch(e.target.value)
+        console.log(search)
+    }
+    const handleadminChange = () => {
+        api.post('/adminchange', { wsId: myContext.workspace, newadmin: newadmin })
+            .then(res => {
+                alert("Admin for this Workspace has been changed")
+                api.post('/signout', { rootUserId: props.rootUser._id }, { withCredentials: true })
+                    .then(res => {
+                        localStorage.clear()
+                    })
+                navigate('/')
+            })
     }
 
 
 
-
     if (props.add && myContext.homepage === 2) {
-
+        // console.log(props.changeadmin)
         return (
 
             <Box flex={5}>
@@ -105,6 +128,25 @@ const Homemain = (props) => {
                             <Button disabled>
                                 Delete
                             </Button>}
+                    </DialogActions>
+                </Dialog>}
+                {myContext.workspace && <Dialog disableEscapeKeyDown open={props.changeadmin} onClose={() => { props.setchangeadmin(false) }}>
+                    <DialogTitle>Change Admin</DialogTitle>
+                    <DialogContent>
+                        <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                            <TextField onChange={(e) => { }} placeholder='Search User' size='small'></TextField>
+                        </Box>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => { props.setchangeadmin(false) }}>Cancel</Button>
+                        <Button color='#ff0000' variant='contained'
+                            onClick={() => {
+
+                            }}>Change</Button>
+                        {/* ||
+                            <Button disabled>
+                                Change
+                            </Button> */}
                     </DialogActions>
                 </Dialog>}
                 <Dialog disableEscapeKeyDown open={props.renamews} onClose={handleClose2}>
@@ -366,6 +408,40 @@ const Homemain = (props) => {
                                         }}>Add</Button>
                                 </DialogActions>
                             </Dialog>
+                            <Dialog fullWidth disableEscapeKeyDown open={changeGroupname} onClose={()=>{setchangeGroupname(false)}}>
+                                <DialogTitle>New Name</DialogTitle>
+                                <DialogContent>
+                                    <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                                        <TextField value={newgroupName} onChange={(e) => { setnewgroupName(e.target.value) }} placeholder='name' size='small'></TextField>
+                                    </Box>
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button onClick={()=>{setchangeGroupname(false)}}>Cancel</Button>
+                                    <Button variant='contained'
+                                        onClick={() => {
+                                            setchangeGroupname(false)
+                                            api.post('/groupnamechange',{projectId:props.selectedproject._id,newname:newgroupName,oldname:oldgroupname})
+                                            .then(res=>{
+                                                reloadProject()
+                                            })
+                                        }}>Change</Button>
+                                </DialogActions>
+                            </Dialog>
+                            <Dialog fullWidth disableEscapeKeyDown open={deletegroup} onClose={()=>{setchangeGroupname(false)}}>
+                                <DialogTitle>Delete Group</DialogTitle>
+                                <DialogContent>
+                                    <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                                        <Typography>Do you surely want to delete this group?</Typography>
+                                    </Box>
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button onClick={()=>{setdeletegroup(false)}}>Cancel</Button>
+                                    <Button variant='contained'
+                                        onClick={() => {
+                                            setdeletegroup(false)
+                                        }}>Delete</Button>
+                                </DialogActions>
+                            </Dialog>
                             <Box minHeight={'100vh'} direction={'column'} justifyContent='space-between'>
                                 <Box display={'flex'} justifyContent={'space-between'} flexDirection={'column'} flex={.5} paddingX={'1rem'} borderBottom={'1px solid black'}>
                                     <Box marginX={'1rem'} height='5rem' marginTop={'2rem'} display={'flex'} justifyContent={'space-between'} flexDirection={'row'}>
@@ -376,14 +452,15 @@ const Homemain = (props) => {
                                             &&
                                             <Box display='flex' flexDirection={'column'} justifyContent='space-between' >
                                                 <Button variant='outlined' onClick={() => props.setinvitetoproject(true)} sx={{ color: 'black' }}><ProfileAdd />invite</Button>
-                                                <Button variant='contained' onClick={() => { props.setmanageProject(true) }}>Manage Project</Button>
+                                                {props.isAdmin?<Button variant='contained' onClick={() => { props.setmanageProject(true) }}>Manage Project</Button>:<></>}
                                             </Box>}
                                     </Box>
                                     <Box>
-                                        <Button onClick={() => { props.setviewpage(0) }} sx={{ color: 'black' }}>Main Table</Button>
-                                        <Button onClick={() => { props.setviewpage(1) }} sx={{ color: 'black' }}>Timeline</Button>
-                                        <Button onClick={() => { props.setviewpage(2) }} sx={{ color: 'black' }}>Workload</Button>
-                                        <Button onClick={() => { props.setviewpage(3) }} sx={{ color: 'black' }}>Dashboard</Button>
+                                        {props.viewpage===0?<Button onClick={() => { props.setviewpage(0) }} sx={{ borderRadius:'0', color: 'black' ,backgroundColor:'grey.main'}}>Main Table</Button>:
+                                        <Button onClick={() => { props.setviewpage(0) }} sx={{ borderRadius:'0', color: 'black' }}>Main Table</Button>}
+                                        {props.viewpage===1?<Button onClick={() => { props.setviewpage(1) }} sx={{ borderRadius:'0', color: 'black',backgroundColor:'grey.main' }}>Timeline</Button>:<Button onClick={() => { props.setviewpage(1) }} sx={{ borderRadius:'0', color: 'black' }}>Timeline</Button>}
+                                        {props.viewpage===2?<Button onClick={() => { props.setviewpage(2) }} sx={{ borderRadius:'0', color: 'black',backgroundColor:'grey.main' }}>Workload</Button>:<Button onClick={() => { props.setviewpage(2) }} sx={{ borderRadius:'0', color: 'black' }}>Workload</Button>}
+                                        {props.viewpage===3?<Button onClick={() => { props.setviewpage(3) }} sx={{ borderRadius:'0', color: 'black',backgroundColor:'grey.main' }}>Dashboard</Button>:<Button onClick={() => { props.setviewpage(3) }} sx={{ borderRadius:'0', color: 'black' }}>Dashboard</Button>}
                                     </Box>
                                 </Box>
                                 {props.viewpage === 0 && <Box flex={9} margin={'1rem'}>
@@ -405,7 +482,7 @@ const Homemain = (props) => {
                                     <Box>
                                         {
                                             props.selectedproject.groups.map((group, index) => (
-                                                <Group reloadProject={reloadProject} rootUser={props.rootUser} wsId={myContext.workspace._id} project={props.selectedproject} key={index} group={group} />
+                                                <Group search={search} setoldgroupname={setoldgroupname} setdeletegroup={setdeletegroup} setchangeGroupname={setchangeGroupname} reloadProject={reloadProject} rootUser={props.rootUser} wsId={myContext.workspace._id} project={props.selectedproject} key={index} group={group} />
                                             ))
                                         }
 
@@ -503,6 +580,40 @@ const Homemain = (props) => {
                             ||
                             <Button disabled>
                                 Delete
+                            </Button>}
+                    </DialogActions>
+                </Dialog>}
+                {myContext.workspace && <Dialog fullWidth disableEscapeKeyDown open={props.changeadmin} onClose={() => { props.setchangeadmin(false) }}>
+                    <DialogTitle>Change Admin</DialogTitle>
+                    <DialogContent>
+                        <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                            <TextField placeholder='enter user name' fullWidth value={newadmin.name} onChange={(e) => {
+                                setnewadmin((prevState) => ({
+                                    ...prevState,
+                                    'name': e.target.value
+                                }))
+                            }}></TextField>
+                            {tempadmin && tempadmin.map(admin => <div key={admin._id}><Box paddingX='.5rem' marginY='.1rem' sx={{ backgroundColor: '#fff', cursor: "pointer", borderRadius: '0.5rem' }}>
+                                <Button fullWidth
+                                    onClick={() => {
+                                        setnewadmin(admin)
+                                    }}
+                                    sx={{ color: "black", textTransform: 'none', justifyContent: 'left' }}>
+                                    {admin.name}
+                                </Button>
+                            </Box></div>)}
+                        </Box>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => { props.setchangeadmin(false); setnewadmin({ name: "" }) }}>Cancel</Button>
+                       {newadmin._id && <Button variant='contained'
+                            onClick={() => {
+                                handleadminChange()
+                                setnewadmin({ name: "" })
+                            }}>Change</Button>
+                        ||
+                            <Button disabled>
+                                Change
                             </Button>}
                     </DialogActions>
                 </Dialog>}

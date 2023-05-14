@@ -29,7 +29,7 @@ const Home = () => {
   const [renamews, setrenamews] = useState(false)
   const [deletews, setdeletews] = useState(false)
   const [viewpage, setviewpage] = useState(0)
- 
+  const [changeadmin, setchangeadmin] = useState(false)
 
 
   const navigate = useNavigate()
@@ -78,7 +78,7 @@ const Home = () => {
   }, [myContext.workspace])
 
 
-
+console.log(changeadmin)
   useEffect(() => {
     if (selectedworkspace) {
       api.post('/currentworkspace', selectedworkspace)
@@ -109,6 +109,7 @@ const Home = () => {
                 setselectedclient={setselectedclient}
                 selectedworkspacedata={selectedworkspacedata}
                 setrenamews={setrenamews}
+                setchangeadmin={setchangeadmin}
                 setdeletews={setdeletews}
                 setmanageProject={setmanageProject}
                 setinvitetoproject={setinvitetoproject} />
@@ -118,6 +119,8 @@ const Home = () => {
                 isAdmin={isAdmin}
                 setdeletews={setdeletews}
                 setrenamews={setrenamews}
+                setchangeadmin={setchangeadmin}
+                changeadmin = {changeadmin}
                 renamews={renamews}
                 deletews={deletews}
                 setadd={setadd}

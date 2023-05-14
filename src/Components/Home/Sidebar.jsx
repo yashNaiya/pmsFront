@@ -35,7 +35,7 @@ const Sidebar = (props) => {
     const Open = Boolean(anchorEl);
     const Open2 = Boolean(anchorEl2);
     useEffect(() => {
-       
+
         let wsId = localStorage.getItem('ws')
         if (wsId) {
             api.post('/currentworkspace', { _id: wsId })
@@ -47,19 +47,19 @@ const Sidebar = (props) => {
                             console.log("Admin dataset")
                             props.setisAdmin(true)
                             api.post('/readclients', { _id: res.data._id })
-                            .then(res => { setcList(res.data) })
-                            .catch(err => { })
+                                .then(res => { setcList(res.data) })
+                                .catch(err => { })
 
-                        api.post('/readprojects', { _id: res.data._id })
-                            .then(res => { setpList(res.data) })
-                            .catch(err => { })
+                            api.post('/readprojects', { _id: res.data._id })
+                                .then(res => { setpList(res.data) })
+                                .catch(err => { })
                         }
                         else {
-                        console.log("User dataset")
-                           api.post('/myprojects', { wsId: res.data._id, _id: props.rootUser._id })
-                               .then(res => { setpList(res.data);console.log(res.data) })
-                               .catch(err => { })
-                       }
+                            console.log("User dataset")
+                            api.post('/myprojects', { wsId: res.data._id, _id: props.rootUser._id })
+                                .then(res => { setpList(res.data); console.log(res.data) })
+                                .catch(err => { })
+                        }
                     }
 
                 })
@@ -75,38 +75,44 @@ const Sidebar = (props) => {
     }, [props.selectedworkspacedata])
 
     useEffect(() => {
-        if (myContext.workspace ) {
-            if(props.isAdmin){
+        if (myContext.workspace) {
+            if (props.isAdmin) {
 
                 // console.log("hellloooo")
                 api.post('/readclients', { _id: myContext.workspace._id })
                     .then(res => { setcList(res.data) })
                     .catch(err => { })
-    
+
                 api.post('/readprojects', { _id: myContext.workspace._id })
                     .then(res => { setpList(res.data) })
                     .catch(err => { })
-            }else{
+            }
+            else {
                 api.post('/myprojects', { wsId: myContext.workspace._id, _id: props.rootUser._id })
-                .then(res => { setpList(res.data);console.log(res.data) })
-                .catch(err => { })
+                    .then(res => { setpList(res.data); console.log(res.data) })
+                    .catch(err => { })
             }
         }
     }, [props.isAdmin])
+    // useEffect(() => {
+    //    
+    //     setpList(dummyList)
+    // }, [pList])
+
 
     useEffect(() => {
-        if(props.rootUser){
-            api.post('/readworkspaces',{_id:props.rootUser._id})
+        if (props.rootUser) {
+            api.post('/readworkspaces', { _id: props.rootUser._id })
                 .then(res => {
                     setwslist(res.data)
                 })
                 .catch()
         }
     }, [props.rootUser])
-    
+
     if (wslist) {
         return (
-        <Box sx={{zIndex: '1000'}} flex={1} minHeight={'100vh'} bgcolor={'grey.main'}>
+            <Box sx={{ zIndex: '1000' }} flex={1} minHeight={'100vh'} bgcolor={'grey.main'}>
                 <Box borderBottom={'1px solid black'} justifyContent={'space-between'} display={'flex'} flexDirection={'column'} marginX={'1rem'} paddingBottom={'1rem'} paddingTop={'4rem'}>
                     <Box display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
                         {myContext.workspace && <Typography fontSize={'20px'} fontWeight={'bold'}>{myContext.workspace.name}</Typography>
@@ -130,7 +136,8 @@ const Sidebar = (props) => {
                             }}
                         >
                             <MenuItem onClick={() => { setAnchorEl(null); props.setrenamews(true) }}>Rename</MenuItem>
-                            <MenuItem onClick={() => { setAnchorEl(null); props.setdeletews(true) }}>Delete</MenuItem>
+                            <MenuItem sx={{ color: '#ff0000' }} onClick={() => { setAnchorEl(null); props.setdeletews(true) }}>Delete</MenuItem>
+                            <MenuItem sx={{ color: '#ff0000' }} onClick={() => { setAnchorEl(null); props.setchangeadmin(true) }}>Change Admin</MenuItem>
                         </Menu>
                     </Box>
                     <FormControl fullWidth size='small'>

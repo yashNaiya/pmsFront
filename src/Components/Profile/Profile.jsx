@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import api from '../../Api'
@@ -7,8 +7,10 @@ import { Edit } from 'iconsax-react';
 import Navigate from '../Navigate';
 import Localimage from '../../Assets/man.png'
 import { IconButton } from '@mui/material';
+import AppContext from '../AppContext';
 
 const Profile = () => {
+    const myContext = useContext(AppContext);
     const SERVER_HOST = process.env.REACT_APP_API_ENDPOINT + '/images/'
 
     const [rootUser, setrootUser] = useState()
@@ -68,6 +70,7 @@ const Profile = () => {
         api.post('/signout', { rootUserId: rootUser._id }, { withCredentials: true })
             .then(res => {
                 alert(res.data)
+                myContext.setWorkspace()
                 localStorage.clear()
             })
         navigate('/')

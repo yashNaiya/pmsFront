@@ -30,7 +30,7 @@ const Workload = (props) => {
   const [onHoldLive, setonHoldLive] = useState(0)
   const [groupLive, setgroupLive] = useState(0)
 
-
+  const [teampastdue, setteampastdue] = useState(0)
   const [teamAllTasks, setteamAllTasks] = useState([])
   const [teamLiveTasks, setteamLiveTasks] = useState([])
   const [teamThisWeek, setteamThisWeek] = useState([])
@@ -43,7 +43,8 @@ const Workload = (props) => {
   const [teamErrorLive, setteamErrorLive] = useState(0)
   const [teamWorkingLive, setteamWorkingLive] = useState(0)
   const [teamonHoldLive, setteamonHoldLive] = useState(0)
-
+  const [usereff, setusereff] = useState(0)
+  const [teameff, setteameff] = useState()
   useEffect(() => {
     api.post('/getmembers', props.project.members)
       .then(res => {
@@ -64,6 +65,7 @@ const Workload = (props) => {
 
   const handleTeamInfo = (team) => {
     let teamtasks = []
+    let teampastDue = []
     let teamThisWeekArray = []
     let teamTodayArray = []
     let teamlivetasks = []
@@ -123,6 +125,7 @@ const Workload = (props) => {
 
             } else {
               console.log("Past Due!!")
+              teampastDue = teampastDue + 1
 
             }
           }
@@ -161,7 +164,14 @@ const Workload = (props) => {
     setteamErrorLive(teamerrorLive)
     setteamWorkingLive(teamworkingLive)
     setteamonHoldLive(teamonholdLive)
+    setteampastdue(teampastDue)
   }
+  useEffect(() => {
+    const effteam = (100 - 100 * teampastdue.length / teamAllTasks.length)
+    console.log(effteam)
+    setteameff(effteam)
+  }, [teampastdue])
+
 
   const handleUserInfo = (user) => {
     let completed = 0
@@ -233,6 +243,14 @@ const Workload = (props) => {
     setlivetasks(livetasks)
   }
   useEffect(() => {
+    if (member) {
+      const eff = 100 * pastdue.length / (member.work.length)
+      console.log("efficiency", (100 - eff))
+      setusereff(100 - eff)
+    }
+  }, [pastdue])
+
+  useEffect(() => {
     let completed = 0
     let error = 0
     let working = 0
@@ -285,9 +303,13 @@ const Workload = (props) => {
             <Typography>Select Member</Typography>
           </Box>
         }
-        {member && <Box>
-          <Typography fontWeight={'bold'} fontSize={'24px'}>Efficiency :80% </Typography>
-        </Box>}
+        {member && isteam ? <Box>
+          <Typography fontWeight={'bold'} fontSize={'24px'}>Efficiency :{teameff}% </Typography>
+        </Box> :
+          <Box>
+            <Typography fontWeight={'bold'} fontSize={'24px'}>Efficiency :{usereff}% </Typography>
+          </Box>
+        }
       </Box>
       <Box>
         <Box
@@ -484,7 +506,7 @@ const Workload = (props) => {
                 <Box display='flex' justifyContent={'space-between'} flexDirection='row'>
                   <Typography fontSize={'22px'}>Total Tasks :</Typography>
                   <Typography fontSize={'22px'}>{teamAllTasks.length}</Typography>
-                </Box> 
+                </Box>
               </Box>
               <Box display='flex' justifyContent={'space-between'} flexDirection='column'>
                 <Box display='flex' justifyContent={'space-between'} flexDirection='row'>
