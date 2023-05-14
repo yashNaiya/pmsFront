@@ -3,11 +3,11 @@ import { Chart } from "react-google-charts";
 
 export const data = [
     [{ label: 'Date', type: 'date' }, "Complete", "Working", "On Hold", "Error"],
-    [{ v: new Date(2023, 2, 28) }, 10, 12, 5, 2],
-    [{ v: new Date(2023, 2, 29) }, 12, 15, 5, 3],
-    [{ v: new Date(2023, 2, 30) }, 12, 15, 5, 3],
-    [{ v: new Date(2023, 2, 31) }, 12, 15, 5, 3],
-    [{ v: new Date(2023, 3, 1) }, 12, 15, 5, 3],
+    [{ v: new Date(2023, 5, 10) }, 9, 21, 5, 2],
+    [{ v: new Date(2023, 5, 11) }, 9, 14, 4, 3],
+    [{ v: new Date(2023, 5, 12) }, 10, 17, 7, 2],
+    [{ v: new Date(2023, 5, 13) }, 12, 20, 9, 3],
+    [{ v: new Date(2023, 5, 14) }, 15, 15, 9, 4],
 ];
 
 export const options = {
