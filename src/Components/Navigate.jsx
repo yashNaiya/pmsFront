@@ -23,8 +23,7 @@ const Navigate = () => {
                     position={'fixed'} height={'100vh'}
                     sx={{
                         backgroundColor: 'primary.main',
-                        borderTopRightRadius: '.5rem',
-                        borderBottomRightRadius: '.5rem'
+                       
                     }}
                     display='flex' justifyContent={'space-around'} flexDirection={'column'}
                 >
@@ -64,8 +63,6 @@ const Navigate = () => {
                     position={'fixed'} height={'100vh'}
                     sx={{
                         backgroundColor: 'primary.main',
-                        borderTopRightRadius: '.5rem',
-                        borderBottomRightRadius: '.5rem'
                     }}
                     display='flex' justifyContent={'space-around'} flexDirection={'column'}
                 >

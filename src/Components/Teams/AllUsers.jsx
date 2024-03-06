@@ -18,7 +18,7 @@ const AllUsers = (props) => {
                 return (
                     <Box>
                         <Button sx={{ marginRight: '1rem' }} variant='contained' onClick={() => {
-                            // console.log(tableMeta.rowData[1]) 
+                            console.log(tableMeta.rowData[1]) 
                             api.post('/removefromws', { email: tableMeta.rowData[1], ws: props.workspace })
                                 .then(res => {
                                     alert(res.data.message)

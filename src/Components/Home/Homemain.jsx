@@ -32,7 +32,7 @@ const Homemain = (props) => {
     const [oldgroupname, setoldgroupname] = useState()
     const navigate = useNavigate()
     let tempadmin = []
-    if(props.users){
+    if (props.users) {
         tempadmin = props.users.filter(user => {
             return user.name === newadmin.name
         })
@@ -408,7 +408,7 @@ const Homemain = (props) => {
                                         }}>Add</Button>
                                 </DialogActions>
                             </Dialog>
-                            <Dialog fullWidth disableEscapeKeyDown open={changeGroupname} onClose={()=>{setchangeGroupname(false)}}>
+                            <Dialog fullWidth disableEscapeKeyDown open={changeGroupname} onClose={() => { setchangeGroupname(false) }}>
                                 <DialogTitle>New Name</DialogTitle>
                                 <DialogContent>
                                     <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
@@ -416,18 +416,18 @@ const Homemain = (props) => {
                                     </Box>
                                 </DialogContent>
                                 <DialogActions>
-                                    <Button onClick={()=>{setchangeGroupname(false)}}>Cancel</Button>
+                                    <Button onClick={() => { setchangeGroupname(false) }}>Cancel</Button>
                                     <Button variant='contained'
                                         onClick={() => {
                                             setchangeGroupname(false)
-                                            api.post('/groupnamechange',{projectId:props.selectedproject._id,newname:newgroupName,oldname:oldgroupname})
-                                            .then(res=>{
-                                                reloadProject()
-                                            })
+                                            api.post('/groupnamechange', { projectId: props.selectedproject._id, newname: newgroupName, oldname: oldgroupname })
+                                                .then(res => {
+                                                    reloadProject()
+                                                })
                                         }}>Change</Button>
                                 </DialogActions>
                             </Dialog>
-                            <Dialog fullWidth disableEscapeKeyDown open={deletegroup} onClose={()=>{setchangeGroupname(false)}}>
+                            <Dialog fullWidth disableEscapeKeyDown open={deletegroup} onClose={() => { setchangeGroupname(false) }}>
                                 <DialogTitle>Delete Group</DialogTitle>
                                 <DialogContent>
                                     <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
@@ -435,7 +435,7 @@ const Homemain = (props) => {
                                     </Box>
                                 </DialogContent>
                                 <DialogActions>
-                                    <Button onClick={()=>{setdeletegroup(false)}}>Cancel</Button>
+                                    <Button onClick={() => { setdeletegroup(false) }}>Cancel</Button>
                                     <Button variant='contained'
                                         onClick={() => {
                                             setdeletegroup(false)
@@ -452,16 +452,20 @@ const Homemain = (props) => {
                                             &&
                                             <Box display='flex' flexDirection={'column'} justifyContent='space-between' >
                                                 <Button variant='outlined' onClick={() => props.setinvitetoproject(true)} sx={{ color: 'black' }}><ProfileAdd />invite</Button>
-                                                {props.isAdmin?<Button variant='contained' onClick={() => { props.setmanageProject(true) }}>Manage Project</Button>:<></>}
+                                                {props.isAdmin ? <Button variant='contained' onClick={() => { props.setmanageProject(true) }}>Manage Project</Button> : <></>}
                                             </Box>}
                                     </Box>
-                                    <Box>
-                                        {props.viewpage===0?<Button onClick={() => { props.setviewpage(0) }} sx={{ borderRadius:'0', color: 'black' ,backgroundColor:'grey.main'}}>Main Table</Button>:
-                                        <Button onClick={() => { props.setviewpage(0) }} sx={{ borderRadius:'0', color: 'black' }}>Main Table</Button>}
-                                        {props.viewpage===1?<Button onClick={() => { props.setviewpage(1) }} sx={{ borderRadius:'0', color: 'black',backgroundColor:'grey.main' }}>Timeline</Button>:<Button onClick={() => { props.setviewpage(1) }} sx={{ borderRadius:'0', color: 'black' }}>Timeline</Button>}
-                                        {props.viewpage===2?<Button onClick={() => { props.setviewpage(2) }} sx={{ borderRadius:'0', color: 'black',backgroundColor:'grey.main' }}>Workload</Button>:<Button onClick={() => { props.setviewpage(2) }} sx={{ borderRadius:'0', color: 'black' }}>Workload</Button>}
-                                        {props.viewpage===3?<Button onClick={() => { props.setviewpage(3) }} sx={{ borderRadius:'0', color: 'black',backgroundColor:'grey.main' }}>Dashboard</Button>:<Button onClick={() => { props.setviewpage(3) }} sx={{ borderRadius:'0', color: 'black' }}>Dashboard</Button>}
-                                    </Box>
+                                    {(props.selectedproject.manager._id.toString() === props.rootUser._id.toString() || myContext.workspace.admin.toString() === props.rootUser._id.toString())
+                                        && <Box>
+                                            {props.viewpage === 0 ? <Button onClick={() => { props.setviewpage(0) }} sx={{ borderRadius: '0', color: 'black', backgroundColor: 'grey.main' }}>Main Table</Button> :
+                                                <Button onClick={() => { props.setviewpage(0) }} sx={{ borderRadius: '0', color: 'black' }}>Main Table</Button>}
+                                            {props.viewpage === 1 ? <Button onClick={() => { props.setviewpage(1) }} sx={{ borderRadius: '0', color: 'black', backgroundColor: 'grey.main' }}>Timeline</Button> : <Button onClick={() => { props.setviewpage(1) }} sx={{ borderRadius: '0', color: 'black' }}>Timeline</Button>}
+                                            {props.viewpage === 2 ? <Button onClick={() => { props.setviewpage(2) }} sx={{ borderRadius: '0', color: 'black', backgroundColor: 'grey.main' }}>Workload</Button> : <Button onClick={() => { props.setviewpage(2) }} sx={{ borderRadius: '0', color: 'black' }}>Workload</Button>}
+                                            {props.viewpage === 3 ? <Button onClick={() => { props.setviewpage(3) }} sx={{ borderRadius: '0', color: 'black', backgroundColor: 'grey.main' }}>Dashboard</Button> : <Button onClick={() => { props.setviewpage(3) }} sx={{ borderRadius: '0', color: 'black' }}>Dashboard</Button>}
+                                        </Box> ||
+                                        <Box>
+                                            <Button onClick={() => { props.setviewpage(0) }} sx={{ borderRadius: '0', color: 'black', backgroundColor: 'grey.main' }}>Main Table</Button>
+                                        </Box>}
                                 </Box>
                                 {props.viewpage === 0 && <Box flex={9} margin={'1rem'}>
                                     <Box display='flex' width='40%' justifyContent={'space-between'}>
@@ -606,12 +610,12 @@ const Homemain = (props) => {
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={() => { props.setchangeadmin(false); setnewadmin({ name: "" }) }}>Cancel</Button>
-                       {newadmin._id && <Button variant='contained'
+                        {newadmin._id && <Button variant='contained'
                             onClick={() => {
                                 handleadminChange()
                                 setnewadmin({ name: "" })
                             }}>Change</Button>
-                        ||
+                            ||
                             <Button disabled>
                                 Change
                             </Button>}
